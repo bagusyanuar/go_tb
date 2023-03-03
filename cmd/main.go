@@ -1,10 +1,16 @@
 package main
 
-import "github.com/joho/godotenv"
+import (
+	"fmt"
+
+	"github.com/bagusyanuar/go_tb/config"
+	"github.com/bagusyanuar/go_tb/router"
+)
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		panic("failed to load .env file")
-	}
+	configuration := config.New()
+	// _ := config.NewConnectionDatabase(configuration)
+	appPort := configuration.Get("APP_PORT")
+	server := router.InitializeRoute()
+	server.Run(fmt.Sprintf(":%s", appPort))
 }
