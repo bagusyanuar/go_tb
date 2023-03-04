@@ -11,7 +11,7 @@ func InitializeRoute() *gin.Engine {
 
 	route.GET("/", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
-			"app_name": "survia development",
+			"app_name": "teman_belajar",
 			"version":  "1.0.0",
 		})
 	})
