@@ -32,13 +32,13 @@ func (User) TableName() string {
 }
 
 type UserService interface {
-	Fetch() ([]User, error)
+	Fetch() (data []model.CreateUserResponse, err error)
 	FetchByID(id string) (*User, error)
 	Create(request model.CreateUserRequest) (user *User, err error)
 }
 
 type UserRepository interface {
-	Fetch() (results []User, err error)
+	Fetch() (data []model.CreateUserResponse, err error)
 	FetchByID(id string) (result *User, err error)
 	Create(user User) (result *User, err error)
 }

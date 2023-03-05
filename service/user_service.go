@@ -3,6 +3,7 @@ package service
 import (
 	"github.com/bagusyanuar/go_tb/domain"
 	"github.com/bagusyanuar/go_tb/model"
+	"golang.org/x/crypto/bcrypt"
 )
 
 func NewUserService(userRepository domain.UserRepository) domain.UserService {
@@ -17,20 +18,29 @@ type userService struct {
 
 // Create implements domain.UserService
 func (service *userService) Create(request model.CreateUserRequest) (user *domain.User, err error) {
-	password := request.Password
+
+	var password *string
+	if request.Password != nil {
+		hashedPassword, errHashed := bcrypt.GenerateFromPassword([]byte(*request.Password), 13)
+		if errHashed != nil {
+			return nil, errHashed
+		}
+		tmpPassword := string(hashedPassword)
+		password = &tmpPassword
+	}
+
 	entity := domain.User{
 		Email:    request.Email,
 		Username: request.Username,
 		Password: password,
 		Roles:    request.Roles,
 	}
-	user, err = service.UserRepository.Create(entity)
-	return user, err
+	return service.UserRepository.Create(entity)
 }
 
 // Fetch implements domain.UserService
-func (*userService) Fetch() ([]domain.User, error) {
-	panic("unimplemented")
+func (service *userService) Fetch() (data []model.CreateUserResponse, err error) {
+	return service.UserRepository.Fetch()
 }
 
 // FetchByID implements domain.UserService

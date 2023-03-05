@@ -9,8 +9,8 @@ import (
 
 func main() {
 	configuration := config.New()
-	// _ := config.NewConnectionDatabase(configuration)
+	database := config.NewConnectionDatabase(configuration)
 	appPort := configuration.Get("APP_PORT")
-	server := router.InitializeRoute()
+	server := router.BuildSheme(database)
 	server.Run(fmt.Sprintf(":%s", appPort))
 }

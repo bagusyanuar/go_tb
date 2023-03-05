@@ -2,6 +2,7 @@ package repository
 
 import (
 	"github.com/bagusyanuar/go_tb/domain"
+	"github.com/bagusyanuar/go_tb/model"
 	"gorm.io/gorm"
 )
 
@@ -24,8 +25,12 @@ func (repository *userRepositoryImplementation) Create(user domain.User) (result
 }
 
 // Fetch implements domain.UserRepository
-func (*userRepositoryImplementation) Fetch() (results []domain.User, err error) {
-	panic("unimplemented")
+func (repository *userRepositoryImplementation) Fetch() (data []model.CreateUserResponse, err error) {
+	var entity []domain.User
+	if err = repository.Database.Debug().Unscoped().Model(&entity).Find(&data).Error; err != nil {
+		return data, err
+	}
+	return data, nil
 }
 
 // FetchByID implements domain.UserRepository

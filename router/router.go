@@ -3,17 +3,21 @@ package router
 import (
 	"net/http"
 
+	"github.com/bagusyanuar/go_tb/http/builder"
 	"github.com/gin-gonic/gin"
+	"gorm.io/gorm"
 )
 
-func InitializeRoute() *gin.Engine {
+func BuildSheme(db *gorm.DB) *gin.Engine {
 	route := gin.Default()
-
+	route.SetTrustedProxies([]string{"127.0.0.1", "localhost"})
 	route.GET("/", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
 			"app_name": "teman_belajar",
 			"version":  "1.0.0",
 		})
 	})
+
+	builder.Build(route, db)
 	return route
 }
