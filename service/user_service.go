@@ -3,20 +3,21 @@ package service
 import (
 	"github.com/bagusyanuar/go_tb/domain"
 	"github.com/bagusyanuar/go_tb/model"
+	"github.com/bagusyanuar/go_tb/usecase"
 	"golang.org/x/crypto/bcrypt"
 )
 
-func NewUserService(userRepository domain.UserRepository) domain.UserService {
+func NewUserService(userRepository usecase.UserRepository) usecase.UserService {
 	return &userService{
 		UserRepository: userRepository,
 	}
 }
 
 type userService struct {
-	UserRepository domain.UserRepository
+	UserRepository usecase.UserRepository
 }
 
-// Create implements domain.UserService
+// Create implements usecase.UserService
 func (service *userService) Create(request model.CreateUserRequest) (user *domain.User, err error) {
 
 	var password *string
@@ -38,12 +39,12 @@ func (service *userService) Create(request model.CreateUserRequest) (user *domai
 	return service.UserRepository.Create(entity)
 }
 
-// Fetch implements domain.UserService
-func (service *userService) Fetch() (data []model.CreateUserResponse, err error) {
+// Fetch implements usecase.UserService
+func (service *userService) Fetch() (data []model.APIUserResponse, err error) {
 	return service.UserRepository.Fetch()
 }
 
-// FetchByID implements domain.UserService
+// FetchByID implements usecase.UserService
 func (*userService) FetchByID(id string) (*domain.User, error) {
 	panic("unimplemented")
 }

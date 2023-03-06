@@ -4,16 +4,16 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/bagusyanuar/go_tb/domain"
 	"github.com/bagusyanuar/go_tb/model"
+	"github.com/bagusyanuar/go_tb/usecase"
 	"github.com/gin-gonic/gin"
 )
 
 type UserController struct {
-	UserService domain.UserService
+	UserService usecase.UserService
 }
 
-func NewUserController(userService domain.UserService) UserController {
+func NewUserController(userService usecase.UserService) UserController {
 	return UserController{
 		UserService: userService,
 	}

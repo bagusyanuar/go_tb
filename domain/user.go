@@ -3,7 +3,6 @@ package domain
 import (
 	"time"
 
-	"github.com/bagusyanuar/go_tb/model"
 	"github.com/google/uuid"
 	"gorm.io/datatypes"
 	"gorm.io/gorm"
@@ -29,16 +28,4 @@ func (user *User) BeforeCreate(tx *gorm.DB) (err error) {
 
 func (User) TableName() string {
 	return "users"
-}
-
-type UserService interface {
-	Fetch() (data []model.CreateUserResponse, err error)
-	FetchByID(id string) (*User, error)
-	Create(request model.CreateUserRequest) (user *User, err error)
-}
-
-type UserRepository interface {
-	Fetch() (data []model.CreateUserResponse, err error)
-	FetchByID(id string) (result *User, err error)
-	Create(user User) (result *User, err error)
 }
