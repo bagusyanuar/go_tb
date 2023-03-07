@@ -30,3 +30,42 @@ type Member struct {
 	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;" json:"deleted_at"`
 	User      User           `gorm:"foreignKey:UserID"`
 }
+
+type Category struct {
+	ID        uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"id"`
+	Name      string         `gorm:"column:name" json:"name"`
+	Slug      string         `gorm:"column:slug;unique;not null" json:"slug"`
+	CreatedAt time.Time      `gorm:"column:created_at;not null" json:"created_at"`
+	UpdatedAt time.Time      `gorm:"column:updated_at;not null" json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;" json:"deleted_at"`
+}
+
+type Subject struct {
+	ID         uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"id"`
+	CategoryID uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;" json:"category_id"`
+	Name       string         `gorm:"column:name" json:"name"`
+	Slug       string         `gorm:"column:slug;unique;not null" json:"slug"`
+	Icon       string         `gorm:"column:icon;type:text" json:"icon"`
+	CreatedAt  time.Time      `gorm:"column:created_at;not null" json:"created_at"`
+	UpdatedAt  time.Time      `gorm:"column:updated_at;not null" json:"updated_at"`
+	DeletedAt  gorm.DeletedAt `gorm:"column:deleted_at;" json:"deleted_at"`
+	Category   Category       `gorm:"foreignKey:CategoryID"`
+}
+
+type Grade struct {
+	ID        uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"id"`
+	Name      string         `gorm:"column:name" json:"name"`
+	Slug      string         `gorm:"column:slug;unique;not null" json:"slug"`
+	CreatedAt time.Time      `gorm:"column:created_at;not null" json:"created_at"`
+	UpdatedAt time.Time      `gorm:"column:updated_at;not null" json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;" json:"deleted_at"`
+}
+
+type MentorLevel struct {
+	ID        uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"id"`
+	Name      string         `gorm:"column:name" json:"name"`
+	Slug      string         `gorm:"column:slug;unique;not null" json:"slug"`
+	CreatedAt time.Time      `gorm:"column:created_at;not null" json:"created_at"`
+	UpdatedAt time.Time      `gorm:"column:updated_at;not null" json:"updated_at"`
+	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;" json:"deleted_at"`
+}
