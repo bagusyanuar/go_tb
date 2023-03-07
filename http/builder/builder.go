@@ -18,6 +18,9 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	subjectRepository := repository.NewSubjectRepository(db)
 	gradeRepository := repository.NewGradeRepository(db)
 	mentorLevelRepository := repository.NewMentorLevelRepository(db)
+	provinceRepository := repository.NewProvinceRepository(db)
+	cityRepository := repository.NewCityRepository(db)
+	districtRepository := repository.NewDistrictRepository(db)
 
 	//build up service
 	authService := service.NewAuthService(authRepository)
@@ -27,6 +30,9 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	subjectService := service.NewSubjectService(subjectRepository)
 	gradeService := service.NewGradeService(gradeRepository)
 	mentorLevelService := service.NewMentorLevelService(mentorLevelRepository)
+	provinceService := service.NewProvinceRepository(provinceRepository)
+	cityService := service.NewCityService(cityRepository)
+	districtService := service.NewDistrictService(districtRepository)
 
 	//build up http handler
 	authController := handler.NewAuthController(authService)
@@ -36,6 +42,9 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	subjectController := handler.NewSubjectController(subjectService)
 	gradeController := handler.NewGradeController(gradeService)
 	mentorLevelController := handler.NewMentorLevelController(mentorLevelService)
+	provinceController := handler.NewProvinceController(provinceService)
+	cityController := handler.NewCityController(cityService)
+	districtController := handler.NewDistrictController(districtService)
 
 	//setup route
 	authController.Route(route)
@@ -45,4 +54,7 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	subjectController.Route(route)
 	gradeController.Route(route)
 	mentorLevelController.Route(route)
+	provinceController.Route(route)
+	cityController.Route(route)
+	districtController.Route(route)
 }

@@ -52,3 +52,42 @@ func (repository *authRepositoryImplementation) SignUpMember(user domain.User, m
 	}
 	return &res, nil
 }
+
+// SignUpMentor implements usecase.AuthRepository
+func (repository *authRepositoryImplementation) SignUpMentor(user domain.User, mentor domain.Mentor) (data *model.APISignUpResponse, err error) {
+	tx := repository.Database.Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err = tx.Create(&user).Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+
+	entityMentor := domain.Mentor{
+		UserID:        user.ID,
+		MentorLevelID: mentor.MentorLevelID,
+		Name:          mentor.Name,
+		Slug:          mentor.Slug,
+		Gender:        mentor.Gender,
+		Phone:         mentor.Phone,
+		Address:       mentor.Address,
+		Avatar:        mentor.Avatar,
+	}
+	if err = tx.Create(&entityMentor).Error; err != nil {
+		tx.Rollback()
+		return nil, err
+	}
+	tx.Commit()
+
+	res := model.APISignUpResponse{
+		ID:       user.ID,
+		Username: user.Username,
+		Email:    user.Email,
+		Role:     "member",
+	}
+	return &res, nil
+}

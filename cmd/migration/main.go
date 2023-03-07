@@ -15,5 +15,9 @@ func main() {
 	database.AutoMigrate(config.Subject{})
 	database.AutoMigrate(config.Grade{})
 	database.AutoMigrate(config.MentorLevel{})
+	database.AutoMigrate(config.Province{})
+	database.AutoMigrate(config.City{})
+	database.AutoMigrate(config.District{})
+	database.AutoMigrate(config.Mentor{})
 	log.Println("success migrate database")
 }
