@@ -27,6 +27,7 @@ type APISubjectResponse struct {
 	UpdatedAt  time.Time      `gorm:"column:updated_at;not null" json:"updated_at"`
 	DeletedAt  gorm.DeletedAt `gorm:"column:deleted_at;" json:"deleted_at"`
 	Category   *withCategory  `gorm:"foreignKey:CategoryID" json:"category"`
+	Grades     []withGrades   `gorm:"many2many:subject_grades;foreignKey:id;joinForeignKey:subject_id"`
 }
 
 type withCategory struct {
@@ -36,4 +37,10 @@ type withCategory struct {
 	// CreatedAt  time.Time      `json:"created_at"`
 	// UpdatedAt  time.Time      `json:"updated_at"`
 	// DeletedAt  gorm.DeletedAt `json:"deleted_at"`
+}
+
+type withGrades struct {
+	ID   uuid.UUID `json:"id"`
+	Name string    `json:"name"`
+	Slug string    `json:"slug"`
 }

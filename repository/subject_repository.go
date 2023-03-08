@@ -4,6 +4,7 @@ import (
 	"github.com/bagusyanuar/go_tb/domain"
 	"github.com/bagusyanuar/go_tb/model"
 	"github.com/bagusyanuar/go_tb/usecase"
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -26,11 +27,8 @@ func (repository *subjectRepositoryImplementation) Create(entity domain.Subject)
 }
 
 // Fetch implements usecase.SubjectRepository
-func (repository *subjectRepositoryImplementation) Fetch(param string) (data []model.APISubjectResponse, err error) {
-	var entity []domain.Subject
-	if err = repository.Database.Debug().Model(&entity).Where("name LIKE ?", "%"+param+"%").Preload("Category", func(db *gorm.DB) *gorm.DB {
-		return db.Table("categories")
-	}).Find(&data).Error; err != nil {
+func (repository *subjectRepositoryImplementation) Fetch(param string) (data []domain.Subject, err error) {
+	if err = repository.Database.Debug().Model(&domain.Subject{}).Where("name LIKE ?", "%"+param+"%").Preload("Grades").Find(&data).Error; err != nil {
 		return data, err
 	}
 	return data, nil
@@ -59,10 +57,13 @@ func (repository *subjectRepositoryImplementation) FetchBySlug(slug string) (dat
 }
 
 // AppendGrade implements usecase.SubjectRepository
-func (repository *subjectRepositoryImplementation) AppendGrade(id string, grade domain.Grade) (e *domain.Subject, err error) {
-	var entity domain.Subject
-	if err = repository.Database.Debug().Where("id = ?", id).First(&entity).Association("Grades").Append(&grade); err != nil {
+func (repository *subjectRepositoryImplementation) AppendGrade(subjectID uuid.UUID, GradeID uuid.UUID) (e *domain.Subject, err error) {
+	entity := domain.SubjectGrade{
+		SubjectID: subjectID,
+		GradeID:   GradeID,
+	}
+	if err = repository.Database.Debug().Create(&entity).Error; err != nil {
 		return nil, err
 	}
-	return &entity, nil
+	return nil, nil
 }

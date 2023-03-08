@@ -34,7 +34,7 @@ func (service *subjectServiceImplementation) Create(request model.CreateSubjectR
 }
 
 // Fetch implements usecase.SubjectService
-func (service *subjectServiceImplementation) Fetch(param string) (data []model.APISubjectResponse, err error) {
+func (service *subjectServiceImplementation) Fetch(param string) (data []domain.Subject, err error) {
 	return service.SubjectRepository.Fetch(param)
 }
 
@@ -54,8 +54,12 @@ func (service *subjectServiceImplementation) AppendGrade(request model.CreateSub
 	if errUUIDParsing != nil {
 		return nil, errUUIDParsing
 	}
-	gradeEntity := domain.Grade{
-		ID: gradeID,
+	subjectID, errUUIDParsing := uuid.Parse(request.SubjectID)
+	if errUUIDParsing != nil {
+		return nil, errUUIDParsing
 	}
-	return service.SubjectRepository.AppendGrade(request.SubjectID, gradeEntity)
+	// gradeEntity := domain.Grade{
+	// 	ID: gradeID,
+	// }
+	return service.SubjectRepository.AppendGrade(subjectID, gradeID)
 }
