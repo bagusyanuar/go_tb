@@ -12,6 +12,11 @@ type CreateSubjectRequest struct {
 	Name       string `json:"name"`
 }
 
+type CreateSubjectAppendGradeRequest struct {
+	SubjectID string `json:"subject_id"`
+	GradeID   string `json:"grade_id"`
+}
+
 type APISubjectResponse struct {
 	ID         uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"id"`
 	CategoryID uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;" json:"category_id"`

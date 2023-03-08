@@ -79,13 +79,14 @@ func (controller *AuthController) SignUpMentor(c *gin.Context) {
 	}
 
 	request := model.CreateAuthMentorRequest{
-		Email:    email,
-		Username: username,
-		Password: vPassword,
-		Name:     name,
-		Phone:    phone,
-		Address:  address,
-		Gender:   gender,
+		Email:         email,
+		Username:      username,
+		Password:      vPassword,
+		Name:          name,
+		Phone:         phone,
+		Address:       address,
+		Gender:        gender,
+		MentorLevelID: "1dde9eec-6ed0-4e52-bc81-061ad9762efb",
 	}
 
 	accessToken, err := controller.AuthService.SignUpMentor(request)

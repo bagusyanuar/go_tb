@@ -51,6 +51,7 @@ type Subject struct {
 	UpdatedAt  time.Time      `gorm:"column:updated_at;not null" json:"updated_at"`
 	DeletedAt  gorm.DeletedAt `gorm:"column:deleted_at;" json:"deleted_at"`
 	Category   Category       `gorm:"foreignKey:CategoryID"`
+	Grades     []Grade        `gorm:"many2many:subject_grades" json:"grades"`
 }
 
 type Grade struct {

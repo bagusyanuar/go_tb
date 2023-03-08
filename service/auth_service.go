@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"time"
 
 	"github.com/bagusyanuar/go_tb/common"
 	"github.com/bagusyanuar/go_tb/domain"
@@ -86,10 +87,12 @@ func (service *authServiceImplementation) SignUpMentor(request model.CreateAuthM
 		Roles:    roles,
 	}
 
+	now := time.Now()
+	formattedTime := now.Format("20060102150405")
 	mentorEntity := domain.Mentor{
 		MentorLevelID: mentorLevelID,
 		Name:          request.Name,
-		Slug:          common.MakeSlug(request.Name),
+		Slug:          common.MakeSlug(request.Name) + "-" + formattedTime,
 		Gender:        gender,
 		Phone:         request.Phone,
 		Address:       request.Address,

@@ -47,3 +47,15 @@ func (service *subjectServiceImplementation) FetchByID(id string) (data *model.A
 func (service *subjectServiceImplementation) FetchBySlug(slug string) (data *model.APISubjectResponse, err error) {
 	return service.SubjectRepository.FetchBySlug(slug)
 }
+
+// AppendGrade implements usecase.SubjectService
+func (service *subjectServiceImplementation) AppendGrade(request model.CreateSubjectAppendGradeRequest) (e *domain.Subject, err error) {
+	gradeID, errUUIDParsing := uuid.Parse(request.GradeID)
+	if errUUIDParsing != nil {
+		return nil, errUUIDParsing
+	}
+	gradeEntity := domain.Grade{
+		ID: gradeID,
+	}
+	return service.SubjectRepository.AppendGrade(request.SubjectID, gradeEntity)
+}

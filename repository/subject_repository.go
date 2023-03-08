@@ -57,3 +57,12 @@ func (repository *subjectRepositoryImplementation) FetchBySlug(slug string) (dat
 	}
 	return data, nil
 }
+
+// AppendGrade implements usecase.SubjectRepository
+func (repository *subjectRepositoryImplementation) AppendGrade(id string, grade domain.Grade) (e *domain.Subject, err error) {
+	var entity domain.Subject
+	if err = repository.Database.Debug().Where("id = ?", id).First(&entity).Association("Grades").Append(&grade); err != nil {
+		return nil, err
+	}
+	return &entity, nil
+}

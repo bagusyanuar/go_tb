@@ -21,6 +21,7 @@ func NewSubjectController(subjectService usecase.SubjectService) SubjectControll
 func (controller *SubjectController) Route(route *gin.Engine) {
 	route.GET("/api/subjects", controller.Index)
 	route.POST("/api/subjects", controller.Index)
+	route.POST("/api/subjects/:id/grade", controller.AppendGrade)
 }
 
 func (controller *SubjectController) Index(c *gin.Context) {
@@ -71,5 +72,30 @@ func (controller *SubjectController) create(c *gin.Context) {
 		Code:    http.StatusOK,
 		Message: "success",
 		Data:    category,
+	})
+}
+
+func (controller *SubjectController) AppendGrade(c *gin.Context) {
+	subjectID := c.Param("id")
+	gradeID := c.PostForm("grade_id")
+
+	request := model.CreateSubjectAppendGradeRequest{
+		SubjectID: subjectID,
+		GradeID:   gradeID,
+	}
+
+	subject, err := controller.SubjectService.AppendGrade(request)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, common.APIResponse{
+		Code:    http.StatusOK,
+		Message: "success",
+		Data:    subject,
 	})
 }
