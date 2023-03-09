@@ -27,8 +27,13 @@ func (repository *subjectRepositoryImplementation) Create(entity domain.Subject)
 }
 
 // Fetch implements usecase.SubjectRepository
-func (repository *subjectRepositoryImplementation) Fetch(param string) (data []domain.Subject, err error) {
-	if err = repository.Database.Debug().Model(&domain.Subject{}).Where("name LIKE ?", "%"+param+"%").Preload("Grades").Find(&data).Error; err != nil {
+func (repository *subjectRepositoryImplementation) Fetch(param string) (data []model.APISubjectResponse, err error) {
+	if err = repository.Database.Debug().
+		Model(&domain.Subject{}).
+		Where("name LIKE ?", "%"+param+"%").
+		Preload("Category").
+		Preload("Grades").
+		Find(&data).Error; err != nil {
 		return data, err
 	}
 	return data, nil
@@ -36,8 +41,7 @@ func (repository *subjectRepositoryImplementation) Fetch(param string) (data []d
 
 // FetchByID implements usecase.SubjectRepository
 func (repository *subjectRepositoryImplementation) FetchByID(id string) (data *model.APISubjectResponse, err error) {
-	var entity domain.Subject
-	if err = repository.Database.Debug().Model(&entity).Where("id = ?", id).Preload("Category", func(db *gorm.DB) *gorm.DB {
+	if err = repository.Database.Debug().Model(&model.APISubjectResponse{}).Where("id = ?", id).Preload("Category", func(db *gorm.DB) *gorm.DB {
 		return db.Table("categories")
 	}).First(&data).Error; err != nil {
 		return nil, err
@@ -47,8 +51,7 @@ func (repository *subjectRepositoryImplementation) FetchByID(id string) (data *m
 
 // FetchBySlug implements usecase.SubjectRepository
 func (repository *subjectRepositoryImplementation) FetchBySlug(slug string) (data *model.APISubjectResponse, err error) {
-	var entity domain.Subject
-	if err = repository.Database.Debug().Model(&entity).Where("slug = ?", slug).Preload("Category", func(db *gorm.DB) *gorm.DB {
+	if err = repository.Database.Debug().Model(&model.APISubjectResponse{}).Where("slug = ?", slug).Preload("Category", func(db *gorm.DB) *gorm.DB {
 		return db.Table("categories")
 	}).First(&data).Error; err != nil {
 		return nil, err

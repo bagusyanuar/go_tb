@@ -135,3 +135,19 @@ type SubjectGrade struct {
 	SubjectID uuid.UUID `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"subject_id"`
 	GradeID   uuid.UUID `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"grade_id"`
 }
+
+type ProductCourse struct {
+	ID          uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"id"`
+	UserID      uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_user_id,unique;" json:"user_id"`
+	SubjectID   uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_subject_id;" json:"subject_id"`
+	GradeID     uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_grade_id;" json:"grade_id"`
+	Method      datatypes.JSON `gorm:"type:longtext;not null" json:"method"`
+	Slug        string         `gorm:"column:slug;index:idx_slug,unique;not null" json:"slug"`
+	IsAvailable bool           `gorm:"column:is_available;default:0;not null" json:"is_available"`
+	User        User           `gorm:"foreignKey:UserID"`
+	Subject     Subject        `gorm:"foreignKey:SubjectID"`
+	Grade       Grade          `gorm:"foreignKey:GradeID"`
+	CreatedAt   time.Time      `gorm:"column:created_at;not null" json:"created_at"`
+	UpdatedAt   time.Time      `gorm:"column:updated_at;not null" json:"updated_at"`
+	DeletedAt   gorm.DeletedAt `gorm:"column:deleted_at;" json:"deleted_at"`
+}

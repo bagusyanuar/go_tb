@@ -34,7 +34,7 @@ func (service *subjectServiceImplementation) Create(request model.CreateSubjectR
 }
 
 // Fetch implements usecase.SubjectService
-func (service *subjectServiceImplementation) Fetch(param string) (data []domain.Subject, err error) {
+func (service *subjectServiceImplementation) Fetch(param string) (data []model.APISubjectResponse, err error) {
 	return service.SubjectRepository.Fetch(param)
 }
 

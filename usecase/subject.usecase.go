@@ -8,7 +8,7 @@ import (
 
 type SubjectRepository interface {
 	//admin usecase
-	Fetch(param string) (data []domain.Subject, err error)
+	Fetch(param string) (data []model.APISubjectResponse, err error)
 	FetchByID(id string) (data *model.APISubjectResponse, err error)
 	FetchBySlug(slug string) (data *model.APISubjectResponse, err error)
 	Create(entity domain.Subject) (e *domain.Subject, err error)
@@ -17,7 +17,7 @@ type SubjectRepository interface {
 
 type SubjectService interface {
 	//admin usecase
-	Fetch(param string) (data []domain.Subject, err error)
+	Fetch(param string) (data []model.APISubjectResponse, err error)
 	FetchByID(id string) (data *model.APISubjectResponse, err error)
 	FetchBySlug(slug string) (data *model.APISubjectResponse, err error)
 	Create(request model.CreateSubjectRequest) (e *domain.Subject, err error)

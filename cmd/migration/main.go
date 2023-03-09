@@ -19,6 +19,7 @@ func main() {
 	database.AutoMigrate(config.City{})
 	database.AutoMigrate(config.District{})
 	database.AutoMigrate(config.Mentor{})
+	database.AutoMigrate(config.ProductCourse{})
 
 	database.SetupJoinTable(&config.Subject{}, "Grades", &config.Grade{})
 	log.Println("success migrate database")
