@@ -1,8 +1,8 @@
 package repository
 
 import (
+	"github.com/bagusyanuar/go_tb/common"
 	"github.com/bagusyanuar/go_tb/domain"
-	"github.com/bagusyanuar/go_tb/model"
 	"github.com/bagusyanuar/go_tb/usecase"
 	"gorm.io/gorm"
 )
@@ -18,7 +18,7 @@ func NewAuthRepository(database *gorm.DB) usecase.AuthRepository {
 }
 
 // SignUpMember implements usecase.AuthRepository
-func (repository *authRepositoryImplementation) SignUpMember(user domain.User, member domain.Member) (data *model.APISignUpResponse, err error) {
+func (repository *authRepositoryImplementation) SignUpMember(user domain.User, member domain.Member) (data *common.JWTSignReturn, err error) {
 	//open database transaction
 	tx := repository.Database.Begin()
 	defer func() {
@@ -44,7 +44,7 @@ func (repository *authRepositoryImplementation) SignUpMember(user domain.User, m
 	}
 	tx.Commit()
 
-	res := model.APISignUpResponse{
+	res := common.JWTSignReturn{
 		ID:       user.ID,
 		Username: user.Username,
 		Email:    user.Email,
@@ -54,7 +54,7 @@ func (repository *authRepositoryImplementation) SignUpMember(user domain.User, m
 }
 
 // SignUpMentor implements usecase.AuthRepository
-func (repository *authRepositoryImplementation) SignUpMentor(user domain.User, mentor domain.Mentor) (data *model.APISignUpResponse, err error) {
+func (repository *authRepositoryImplementation) SignUpMentor(user domain.User, mentor domain.Mentor) (data *common.JWTSignReturn, err error) {
 	tx := repository.Database.Begin()
 	defer func() {
 		if r := recover(); r != nil {
@@ -83,11 +83,11 @@ func (repository *authRepositoryImplementation) SignUpMentor(user domain.User, m
 	}
 	tx.Commit()
 
-	res := model.APISignUpResponse{
+	res := common.JWTSignReturn{
 		ID:       user.ID,
 		Username: user.Username,
 		Email:    user.Email,
-		Role:     "member",
+		Role:     "mentor",
 	}
 	return &res, nil
 }

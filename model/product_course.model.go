@@ -8,6 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
+//base of product course model
 type ProductCourse struct {
 	ID          uuid.UUID      `json:"id"`
 	UserID      uuid.UUID      `json:"user_id"`
@@ -21,9 +22,22 @@ type ProductCourse struct {
 	DeletedAt   gorm.DeletedAt `gorm:"column:deleted_at;" json:"deleted_at"`
 }
 
+type CreateProductCourseRequest struct {
+	UserID    string `json:"user_id"`
+	SubjectID string `json:"subject_id"`
+	GradeID   string `json:"grade_id"`
+	Method    []int  `json:"method"`
+}
+
 type APIProductCourseResponse struct {
 	ProductCourse
-	User    User    `gorm:"foreignKey:UserID;" json:"user"`
-	Subject Subject `gorm:"foreignKey:SubjectID;" json:"subject"`
-	Grade   Grade   `gorm:"foreignKey:GradeID;" json:"grade"`
+	User    withUserScheme `gorm:"foreignKey:UserID;" json:"user"`
+	Subject Subject        `json:"subject"`
+	Grade   Grade          `json:"grade"`
+}
+
+type withUserScheme struct {
+	ID       uuid.UUID `json:"id"`
+	Email    string    `json:"email"`
+	Username string    `json:"username"`
 }

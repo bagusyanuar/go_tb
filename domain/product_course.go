@@ -19,6 +19,9 @@ type ProductCourse struct {
 	CreatedAt   time.Time      `gorm:"column:created_at;not null" json:"created_at"`
 	UpdatedAt   time.Time      `gorm:"column:updated_at;not null" json:"updated_at"`
 	DeletedAt   gorm.DeletedAt `gorm:"column:deleted_at;" json:"deleted_at"`
+	User        User           `gorm:"foreignKey:UserID;" json:"user"`
+	Subject     Subject        `gorm:"foreignKey:SubjectID;" json:"subject"`
+	Grade       Grade          `gorm:"foreignKey:GradeID;" json:"grade"`
 }
 
 func (productCourse *ProductCourse) BeforeCreate(tx *gorm.DB) (err error) {

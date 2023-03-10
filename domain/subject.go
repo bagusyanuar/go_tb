@@ -16,6 +16,8 @@ type Subject struct {
 	CreatedAt  time.Time      `json:"created_at"`
 	UpdatedAt  time.Time      `json:"updated_at"`
 	DeletedAt  gorm.DeletedAt `json:"deleted_at"`
+	Category   *Category      `gorm:"foreignKey:CategoryID" json:"category"`
+	Grades     []Grade        `gorm:"many2many:subject_grades;joinForeignKey:subject_id;" json:"grades"`
 }
 
 func (subject *Subject) BeforeCreate(tx *gorm.DB) (err error) {

@@ -1,9 +1,9 @@
 package common
 
 import (
+	"errors"
 	"os"
 
-	"github.com/bagusyanuar/go_tb/model"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/google/uuid"
 )
@@ -16,7 +16,14 @@ type JWTClaims struct {
 	Role     string    `json:"roles"`
 }
 
-func CreateJWTAccessToken(model *model.APISignUpResponse) (accessToken string, err error) {
+type JWTSignReturn struct {
+	ID       uuid.UUID `json:"id"`
+	Email    string    `json:"email"`
+	Username string    `json:"username"`
+	Role     string    `json:"role"`
+}
+
+func CreateJWTAccessToken(jwtSign *JWTSignReturn) (accessToken string, err error) {
 	issuer := os.Getenv("JWT_ISSUER")
 	JWTSignatureKey := os.Getenv("JWT_SIGNATURE_KEY")
 	JWTSigninMethod := jwt.SigningMethodHS256
@@ -24,11 +31,43 @@ func CreateJWTAccessToken(model *model.APISignUpResponse) (accessToken string, e
 		StandardClaims: jwt.StandardClaims{
 			Issuer: issuer,
 		},
-		Unique:   model.ID,
-		Username: model.Username,
-		Email:    model.Email,
-		Role:     model.Role,
+		Unique:   jwtSign.ID,
+		Username: jwtSign.Username,
+		Email:    jwtSign.Email,
+		Role:     jwtSign.Role,
 	}
 	token := jwt.NewWithClaims(JWTSigninMethod, claims)
 	return token.SignedString([]byte(JWTSignatureKey))
+}
+
+func ClaimToken(authoriztion string) (interface{}, error) {
+	if authoriztion == "" {
+		return nil, errors.New("unauthorized")
+	}
+	bearer := string(authoriztion[0:7])
+	tokenString := string(authoriztion[7:])
+	JWTSignatureKey := os.Getenv("JWT_SIGNATURE_KEY")
+
+	if bearer != "Bearer " {
+		return nil, errors.New("invalid bearer")
+	}
+
+	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
+		if method, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, errors.New("invalid jwt sign in method")
+		} else if method != jwt.SigningMethodHS256 {
+			return nil, errors.New("invalid jwt sign in method")
+		}
+		return []byte(JWTSignatureKey), nil
+	})
+
+	if err != nil {
+		return nil, errors.New("error parse jwt")
+	}
+
+	claim, ok := token.Claims.(jwt.MapClaims)
+	if !ok || !token.Valid {
+		return nil, errors.New("error get jwt claim")
+	}
+	return claim, nil
 }

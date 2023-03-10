@@ -35,6 +35,9 @@ func (repository *userRepositoryImplementation) Fetch() (data []model.APIUserRes
 }
 
 // FetchByID implements usecase.UserRepository
-func (*userRepositoryImplementation) FetchByID(id string) (result *domain.User, err error) {
-	panic("unimplemented")
+func (repository *userRepositoryImplementation) FetchByID(id string) (data *domain.User, err error) {
+	if err = repository.Database.Debug().Model(&domain.User{}).Where("id = ?", id).First(&data).Error; err != nil {
+		return nil, err
+	}
+	return data, nil
 }

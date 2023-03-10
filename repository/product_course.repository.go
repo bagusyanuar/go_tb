@@ -19,8 +19,18 @@ func NewProductCourseRepository(database *gorm.DB) usecase.ProductCourseReposito
 
 // Fetch implements usecase.ProductCourseRepository
 func (repository *productCourseRepositoryImplementation) Fetch(param string) (data []model.APIProductCourseResponse, err error) {
-	if err = repository.Database.Debug().Model(&domain.ProductCourse{}).Find(&data).Error; err != nil {
+	if err = repository.Database.Debug().Model(&domain.ProductCourse{}).Preload("User", func(db *gorm.DB) *gorm.DB {
+		return db.Table("users")
+	}).Preload("Subject").Preload("Grade").Find(&data).Error; err != nil {
 		return data, err
 	}
 	return data, nil
+}
+
+// Create implements usecase.ProductCourseRepository
+func (repository *productCourseRepositoryImplementation) Create(entity domain.ProductCourse) (e *domain.ProductCourse, err error) {
+	if err = repository.Database.Debug().Create(&entity).Error; err != nil {
+		return nil, err
+	}
+	return &entity, nil
 }

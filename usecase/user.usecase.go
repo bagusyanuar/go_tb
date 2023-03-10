@@ -7,7 +7,7 @@ import (
 
 type UserRepository interface {
 	Fetch() (data []model.APIUserResponse, err error)
-	FetchByID(id string) (result *domain.User, err error)
+	FetchByID(id string) (data *domain.User, err error)
 	Create(user domain.User) (result *domain.User, err error)
 }
 

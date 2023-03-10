@@ -14,6 +14,7 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	authRepository := repository.NewAuthRepository(db)
 	userRepository := repository.NewUserRepository(db)
 	memberRepository := repository.NewMemberRepository(db)
+	mentorRepository := repository.NewMentorRepository(db)
 	categoryRepository := repository.NewCategoryRepository(db)
 	subjectRepository := repository.NewSubjectRepository(db)
 	gradeRepository := repository.NewGradeRepository(db)
@@ -21,6 +22,7 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	provinceRepository := repository.NewProvinceRepository(db)
 	cityRepository := repository.NewCityRepository(db)
 	districtRepository := repository.NewDistrictRepository(db)
+	productCourseRepository := repository.NewProductCourseRepository(db)
 
 	//build up service
 	authService := service.NewAuthService(authRepository)
@@ -33,6 +35,7 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	provinceService := service.NewProvinceRepository(provinceRepository)
 	cityService := service.NewCityService(cityRepository)
 	districtService := service.NewDistrictService(districtRepository)
+	productCourseService := service.NewProductCourseService(productCourseRepository, mentorRepository, subjectRepository, gradeRepository)
 
 	//build up http handler
 	authController := handler.NewAuthController(authService)
@@ -45,6 +48,7 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	provinceController := handler.NewProvinceController(provinceService)
 	cityController := handler.NewCityController(cityService)
 	districtController := handler.NewDistrictController(districtService)
+	productCourseController := handler.NewProductCourseController(productCourseService)
 
 	//setup route
 	authController.Route(route)
@@ -57,4 +61,5 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	provinceController.Route(route)
 	cityController.Route(route)
 	districtController.Route(route)
+	productCourseController.Route(route)
 }
