@@ -10,9 +10,11 @@ import (
 type Province struct {
 	ID        uuid.UUID      `json:"id"`
 	Name      string         `json:"name"`
+	Code      string         `json:"code"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `json:"deleted_at"`
+	Cities    []City         `gorm:"foreignKey:ProvinceID" json:"cities"`
 }
 
 func (province *Province) BeforeCreate(tx *gorm.DB) (err error) {
@@ -24,4 +26,10 @@ func (province *Province) BeforeCreate(tx *gorm.DB) (err error) {
 
 func (Province) TableName() string {
 	return "provinces"
+}
+
+//request to create new category
+type CreateProvinceRequest struct {
+	Name string `json:"name"`
+	Code string `json:"code"`
 }

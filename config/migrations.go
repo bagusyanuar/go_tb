@@ -75,6 +75,7 @@ type MentorLevel struct {
 type Province struct {
 	ID        uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"id"`
 	Name      string         `gorm:"column:name;type:varchar(255);" json:"name"`
+	Code      string         `gorm:"column:code;type:char(4);index:idx_code,unique;" json:"code"`
 	CreatedAt time.Time      `gorm:"column:created_at;not null" json:"created_at"`
 	UpdatedAt time.Time      `gorm:"column:updated_at;not null" json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;" json:"deleted_at"`
@@ -84,6 +85,7 @@ type City struct {
 	ID         uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"id"`
 	ProvinceID uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;" json:"province_id"`
 	Name       string         `gorm:"column:name;type:varchar(255);" json:"name"`
+	Code       string         `gorm:"column:code;type:char(6);index:idx_code,unique;" json:"code"`
 	CreatedAt  time.Time      `gorm:"column:created_at;not null" json:"created_at"`
 	UpdatedAt  time.Time      `gorm:"column:updated_at;not null" json:"updated_at"`
 	DeletedAt  gorm.DeletedAt `gorm:"column:deleted_at;" json:"deleted_at"`
@@ -93,6 +95,7 @@ type District struct {
 	ID        uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"id"`
 	CityID    uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;" json:"city_id"`
 	Name      string         `gorm:"column:name;type:varchar(255);" json:"name"`
+	Code      string         `gorm:"column:code;type:char(8);index:idx_code,unique;" json:"code"`
 	CreatedAt time.Time      `gorm:"column:created_at;not null" json:"created_at"`
 	UpdatedAt time.Time      `gorm:"column:updated_at;not null" json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;" json:"deleted_at"`
