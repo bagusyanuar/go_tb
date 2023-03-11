@@ -21,6 +21,7 @@ func NewAuthController(authService usecase.AuthService) AuthController {
 func (controller *AuthController) Route(route *gin.Engine) {
 	route.POST("/api/auth/member/sign-up", controller.SignUpMember)
 	route.POST("/api/auth/mentor/sign-up", controller.SignUpMentor)
+	route.POST("/api/auth/mentor/sign-in", controller.SignInMentor)
 }
 
 func (controller *AuthController) SignUpMember(c *gin.Context) {
@@ -90,6 +91,39 @@ func (controller *AuthController) SignUpMentor(c *gin.Context) {
 	}
 
 	accessToken, err := controller.AuthService.SignUpMentor(request)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
+			"status":  http.StatusInternalServerError,
+			"message": err.Error(),
+			"data":    nil,
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"status":  http.StatusOK,
+		"message": "success",
+		"data":    accessToken,
+	})
+}
+
+func (controller *AuthController) SignInMentor(c *gin.Context) {
+	password := c.PostForm("password")
+	email := c.PostForm("email")
+
+	var vPassword *string
+	if password == "" {
+		vPassword = nil
+	} else {
+		vPassword = &password
+	}
+
+	request := model.CreateMentorSignInRequest{
+		Email:    email,
+		Password: vPassword,
+	}
+
+	accessToken, err := controller.AuthService.SignInMentor(request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{
 			"status":  http.StatusInternalServerError,

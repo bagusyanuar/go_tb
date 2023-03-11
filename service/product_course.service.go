@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 
 	"github.com/bagusyanuar/go_tb/domain"
@@ -34,15 +35,15 @@ func NewProductCourseService(
 func (service *productCourseServiceImplementation) Create(request model.CreateProductCourseRequest) (e *domain.ProductCourse, err error) {
 	mentor, errFetchMentor := service.MentorRepository.FetchByUserID(request.UserID)
 	if errFetchMentor != nil {
-		return nil, errFetchMentor
+		return nil, errors.New("mentor not found")
 	}
 	subject, errFetchSubject := service.SubjectRepository.FetchByID(request.SubjectID)
-	if errFetchMentor != nil {
-		return nil, errFetchSubject
+	if errFetchSubject != nil {
+		return nil, errors.New("subject not found")
 	}
 	grade, errFetchGrade := service.GradeRepository.FetchByID(request.GradeID)
-	if errFetchMentor != nil {
-		return nil, errFetchGrade
+	if errFetchGrade != nil {
+		return nil, errors.New("grade not found")
 	}
 
 	slug := fmt.Sprintf("%s-%s-%s", subject.Slug, grade.Slug, mentor.Slug)

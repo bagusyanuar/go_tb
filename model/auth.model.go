@@ -32,3 +32,8 @@ type APISignUpResponse struct {
 	Username string    `json:"username"`
 	Role     string    `json:"role"`
 }
+
+type CreateMentorSignInRequest struct {
+	Email    string  `json:"email"`
+	Password *string `json:"password"`
+}

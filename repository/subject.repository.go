@@ -41,7 +41,7 @@ func (repository *subjectRepositoryImplementation) Fetch(param string) (data []m
 
 // FetchByID implements usecase.SubjectRepository
 func (repository *subjectRepositoryImplementation) FetchByID(id string) (data *model.APISubjectResponse, err error) {
-	if err = repository.Database.Debug().Model(&model.APISubjectResponse{}).Where("id = ?", id).Preload("Category", func(db *gorm.DB) *gorm.DB {
+	if err = repository.Database.Debug().Model(&model.Subject{}).Where("id = ?", id).Preload("Category", func(db *gorm.DB) *gorm.DB {
 		return db.Table("categories")
 	}).First(&data).Error; err != nil {
 		return nil, err

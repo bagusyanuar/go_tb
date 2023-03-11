@@ -5,6 +5,7 @@ import (
 	"github.com/bagusyanuar/go_tb/model"
 	"github.com/bagusyanuar/go_tb/usecase"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 type productCourseRepositoryImplementation struct {
@@ -29,7 +30,7 @@ func (repository *productCourseRepositoryImplementation) Fetch(param string) (da
 
 // Create implements usecase.ProductCourseRepository
 func (repository *productCourseRepositoryImplementation) Create(entity domain.ProductCourse) (e *domain.ProductCourse, err error) {
-	if err = repository.Database.Debug().Create(&entity).Error; err != nil {
+	if err = repository.Database.Debug().Omit(clause.Associations).Create(&entity).Error; err != nil {
 		return nil, err
 	}
 	return &entity, nil

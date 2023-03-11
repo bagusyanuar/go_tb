@@ -3,6 +3,7 @@ package repository
 import (
 	"github.com/bagusyanuar/go_tb/common"
 	"github.com/bagusyanuar/go_tb/domain"
+	"github.com/bagusyanuar/go_tb/model"
 	"github.com/bagusyanuar/go_tb/usecase"
 	"gorm.io/gorm"
 )
@@ -54,7 +55,7 @@ func (repository *authRepositoryImplementation) SignUpMember(user domain.User, m
 }
 
 // SignUpMentor implements usecase.AuthRepository
-func (repository *authRepositoryImplementation) SignUpMentor(user domain.User, mentor domain.Mentor) (data *common.JWTSignReturn, err error) {
+func (repository *authRepositoryImplementation) SignUpMentor(user domain.User, mentor domain.Mentor) (data *domain.User, err error) {
 	tx := repository.Database.Begin()
 	defer func() {
 		if r := recover(); r != nil {
@@ -83,11 +84,15 @@ func (repository *authRepositoryImplementation) SignUpMentor(user domain.User, m
 	}
 	tx.Commit()
 
-	res := common.JWTSignReturn{
-		ID:       user.ID,
-		Username: user.Username,
-		Email:    user.Email,
-		Role:     "mentor",
+	return &user, nil
+}
+
+// SignInMember implements usecase.AuthRepository
+func (repository *authRepositoryImplementation) SignInMentor(request model.CreateMentorSignInRequest) (data *domain.User, err error) {
+	// roleClause := fmt.Sprintf("JSON_SEARCH(%s, 'all', '%s') IS NOT NULL", "role", "mentor")
+	var user *domain.User
+	if err = repository.Database.Debug().Preload("Mentor").Joins("JOIN mentors ON users.id = mentors.user_id").Where("email = ?", request.Email).First(&user).Error; err != nil {
+		return nil, err
 	}
-	return &res, nil
+	return user, nil
 }

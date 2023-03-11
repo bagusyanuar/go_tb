@@ -2,6 +2,7 @@ package service
 
 import (
 	"encoding/json"
+	"errors"
 	"time"
 
 	"github.com/bagusyanuar/go_tb/common"
@@ -99,9 +100,39 @@ func (service *authServiceImplementation) SignUpMentor(request model.CreateAuthM
 		Avatar:        request.Avatar,
 	}
 
-	authEntity, e := service.AuthRepository.SignUpMentor(userEntity, mentorEntity)
+	user, e := service.AuthRepository.SignUpMentor(userEntity, mentorEntity)
 	if e != nil {
 		return "", e
 	}
-	return common.CreateJWTAccessToken(authEntity)
+
+	jwtSign := common.JWTSignReturn{
+		ID:       user.ID,
+		Email:    user.Email,
+		Username: user.Username,
+		Role:     "mentor",
+	}
+	return common.CreateJWTAccessToken(&jwtSign)
+}
+
+// SignInMember implements usecase.AuthService
+func (service *authServiceImplementation) SignInMentor(request model.CreateMentorSignInRequest) (accessToken string, err error) {
+	user, err := service.AuthRepository.SignInMentor(request)
+	if err != nil {
+		return "", err
+	}
+
+	if user.Password != nil {
+		err = bcrypt.CompareHashAndPassword([]byte(*user.Password), []byte(*request.Password))
+		if err != nil {
+			return "", errors.New("password did not match")
+		}
+	}
+
+	d := common.JWTSignReturn{
+		ID:       user.ID,
+		Email:    user.Email,
+		Username: user.Username,
+		Role:     "mentor",
+	}
+	return common.CreateJWTAccessToken(&d)
 }

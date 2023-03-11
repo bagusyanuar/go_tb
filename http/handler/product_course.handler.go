@@ -7,6 +7,7 @@ import (
 	"github.com/bagusyanuar/go_tb/http/middleware"
 	"github.com/bagusyanuar/go_tb/model"
 	"github.com/bagusyanuar/go_tb/usecase"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,7 +21,7 @@ func NewProductCourseController(productCourseService usecase.ProductCourseServic
 
 //routing
 func (controller *ProductCourseController) Route(route *gin.Engine) {
-	route.GET("/api/product-course", controller.Index)
+	route.GET("/api/product-course", middleware.Auth, controller.Index)
 	route.POST("/api/product-course", middleware.Auth, controller.Index)
 }
 
@@ -33,6 +34,7 @@ func (controller *ProductCourseController) Index(c *gin.Context) {
 }
 
 func (controller *ProductCourseController) fetch(c *gin.Context) {
+	// user := c.MustGet("user").(jwt.MapClaims)
 	param := c.Query("q")
 	data, err := controller.ProductCourseService.Fetch(param)
 	if err != nil {
@@ -51,10 +53,12 @@ func (controller *ProductCourseController) fetch(c *gin.Context) {
 }
 
 func (controller *ProductCourseController) create(c *gin.Context) {
-	userID := c.PostForm("user_id")
+	user := c.MustGet("user").(jwt.MapClaims)
 	subjectID := c.PostForm("subject_id")
 	gradeID := c.PostForm("grade_id")
 	methods := []int{1, 2}
+
+	userID := user["unique"].(string)
 
 	request := model.CreateProductCourseRequest{
 		UserID:    userID,
@@ -63,7 +67,7 @@ func (controller *ProductCourseController) create(c *gin.Context) {
 		Method:    methods,
 	}
 
-	grade, err := controller.ProductCourseService.Create(request)
+	_, err := controller.ProductCourseService.Create(request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -75,6 +79,6 @@ func (controller *ProductCourseController) create(c *gin.Context) {
 	c.JSON(http.StatusOK, common.APIResponse{
 		Code:    http.StatusOK,
 		Message: "success",
-		Data:    grade,
+		Data:    nil,
 	})
 }
