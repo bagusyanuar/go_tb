@@ -11,28 +11,28 @@ import (
 	"gorm.io/gorm"
 )
 
-type CategoryHandler struct {
-	CategoryAdminService usecase.CategoryAdminService
+type ProvinceHandler struct {
+	ProvinceAdminService usecase.ProvinceAdminService
 }
 
-func NewCategoryHandler(categoryAdminService usecase.CategoryAdminService) CategoryHandler {
-	return CategoryHandler{CategoryAdminService: categoryAdminService}
+func NewProvinceHandler(provinceAdminService usecase.ProvinceAdminService) ProvinceHandler {
+	return ProvinceHandler{ProvinceAdminService: provinceAdminService}
 }
 
-func (handler *CategoryHandler) RegisterRoute(route *gin.Engine) {
+func (handler *ProvinceHandler) RegisterRoute(route *gin.Engine) {
 	api := route.Group("/api/admin")
 	{
-		api.GET("/category", handler.Find)
-		api.POST("/category", handler.Create)
-		api.GET("/category/:id", handler.FindByID)
-		api.PATCH("/category/:id/patch", handler.Patch)
-		api.DELETE("/category/:id/delete", handler.Delete)
+		api.GET("/province", handler.Find)
+		api.POST("/province", handler.Create)
+		api.GET("/province/:id", handler.FindByID)
+		api.PATCH("/province/:id/patch", handler.Patch)
+		api.DELETE("/province/:id/delete", handler.Delete)
 	}
 }
 
-func (handler *CategoryHandler) Find(c *gin.Context) {
+func (handler *ProvinceHandler) Find(c *gin.Context) {
 	param := c.Query("q")
-	data, err := handler.CategoryAdminService.FindAll(param)
+	data, err := handler.ProvinceAdminService.FindAll(param)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -48,9 +48,9 @@ func (handler *CategoryHandler) Find(c *gin.Context) {
 	})
 }
 
-func (handler *CategoryHandler) FindByID(c *gin.Context) {
+func (handler *ProvinceHandler) FindByID(c *gin.Context) {
 	id := c.Param("id")
-	data, err := handler.CategoryAdminService.FindByID(id)
+	data, err := handler.ProvinceAdminService.FindByID(id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.AbortWithStatusJSON(http.StatusNotFound, common.APIResponse{
@@ -74,10 +74,10 @@ func (handler *CategoryHandler) FindByID(c *gin.Context) {
 	})
 }
 
-func (handler *CategoryHandler) Create(c *gin.Context) {
-	var request domain.CreateCategoryRequest
+func (handler *ProvinceHandler) Create(c *gin.Context) {
+	var request domain.CreateProvinceRequest
 	c.BindJSON(&request)
-	_, err := handler.CategoryAdminService.Create(request)
+	_, err := handler.ProvinceAdminService.Create(request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -93,11 +93,11 @@ func (handler *CategoryHandler) Create(c *gin.Context) {
 	})
 }
 
-func (handler *CategoryHandler) Patch(c *gin.Context) {
+func (handler *ProvinceHandler) Patch(c *gin.Context) {
 	id := c.Param("id")
-	var request domain.CreateCategoryRequest
+	var request domain.CreateProvinceRequest
 	c.BindJSON(&request)
-	_, err := handler.CategoryAdminService.Patch(id, request)
+	_, err := handler.ProvinceAdminService.Patch(id, request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -113,9 +113,9 @@ func (handler *CategoryHandler) Patch(c *gin.Context) {
 	})
 }
 
-func (handler *CategoryHandler) Delete(c *gin.Context) {
+func (handler *ProvinceHandler) Delete(c *gin.Context) {
 	id := c.Param("id")
-	err := handler.CategoryAdminService.Delete(id)
+	err := handler.ProvinceAdminService.Delete(id)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,

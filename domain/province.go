@@ -28,7 +28,7 @@ func (Province) TableName() string {
 	return "provinces"
 }
 
-//request to create new category
+//request to create new province
 type CreateProvinceRequest struct {
 	Name string `json:"name"`
 	Code string `json:"code"`

@@ -14,6 +14,8 @@ type City struct {
 	CreatedAt  time.Time      `json:"created_at"`
 	UpdatedAt  time.Time      `json:"updated_at"`
 	DeletedAt  gorm.DeletedAt `json:"deleted_at"`
+	Province   *Province      `gorm:"foreignKey:ProvinceID" json:"province"`
+	Districts  []District     `gorm:"foreignKey:CityID" json:"districts"`
 }
 
 func (city *City) BeforeCreate(tx *gorm.DB) (err error) {
@@ -25,4 +27,11 @@ func (city *City) BeforeCreate(tx *gorm.DB) (err error) {
 
 func (City) TableName() string {
 	return "cities"
+}
+
+//request to create new city
+type CreateCityRequest struct {
+	ProvinceID string `json:"province_id"`
+	Name       string `json:"name"`
+	Code       string `json:"code"`
 }
