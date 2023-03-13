@@ -11,28 +11,28 @@ import (
 	"gorm.io/gorm"
 )
 
-type CityHandler struct {
-	CityAdminService usecase.CityAdminService
+type DistrictHandler struct {
+	DistrictAdminService usecase.DistrictAdminService
 }
 
-func NewCityHandler(cityAdminService usecase.CityAdminService) CityHandler {
-	return CityHandler{CityAdminService: cityAdminService}
+func NewDistrictHandler(districtAdminService usecase.DistrictAdminService) DistrictHandler {
+	return DistrictHandler{DistrictAdminService: districtAdminService}
 }
 
-func (handler *CityHandler) RegisterRoute(route *gin.Engine) {
+func (handler *DistrictHandler) RegisterRoute(route *gin.Engine) {
 	api := route.Group("/api/admin")
 	{
-		api.GET("/city", handler.Find)
-		api.POST("/city", handler.Create)
-		api.GET("/city/:id", handler.FindByID)
-		api.PATCH("/city/:id/patch", handler.Patch)
-		api.DELETE("/city/:id/delete", handler.Delete)
+		api.GET("/district", handler.Find)
+		api.POST("/district", handler.Create)
+		api.GET("/district/:id", handler.FindByID)
+		api.PATCH("/district/:id/patch", handler.Patch)
+		api.DELETE("/district/:id/delete", handler.Delete)
 	}
 }
 
-func (handler *CityHandler) Find(c *gin.Context) {
+func (handler *DistrictHandler) Find(c *gin.Context) {
 	param := c.Query("q")
-	data, err := handler.CityAdminService.FindAll(param)
+	data, err := handler.DistrictAdminService.FindAll(param)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -48,9 +48,9 @@ func (handler *CityHandler) Find(c *gin.Context) {
 	})
 }
 
-func (handler *CityHandler) FindByID(c *gin.Context) {
+func (handler *DistrictHandler) FindByID(c *gin.Context) {
 	id := c.Param("id")
-	data, err := handler.CityAdminService.FindByID(id)
+	data, err := handler.DistrictAdminService.FindByID(id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.AbortWithStatusJSON(http.StatusNotFound, common.APIResponse{
@@ -74,10 +74,10 @@ func (handler *CityHandler) FindByID(c *gin.Context) {
 	})
 }
 
-func (handler *CityHandler) Create(c *gin.Context) {
-	var request domain.CreateCityRequest
+func (handler *DistrictHandler) Create(c *gin.Context) {
+	var request domain.CreateDistrictRequest
 	c.BindJSON(&request)
-	_, err := handler.CityAdminService.Create(request)
+	_, err := handler.DistrictAdminService.Create(request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -93,11 +93,11 @@ func (handler *CityHandler) Create(c *gin.Context) {
 	})
 }
 
-func (handler *CityHandler) Patch(c *gin.Context) {
+func (handler *DistrictHandler) Patch(c *gin.Context) {
 	id := c.Param("id")
-	var request domain.CreateCityRequest
+	var request domain.CreateDistrictRequest
 	c.BindJSON(&request)
-	_, err := handler.CityAdminService.Patch(id, request)
+	_, err := handler.DistrictAdminService.Patch(id, request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -113,9 +113,9 @@ func (handler *CityHandler) Patch(c *gin.Context) {
 	})
 }
 
-func (handler *CityHandler) Delete(c *gin.Context) {
+func (handler *DistrictHandler) Delete(c *gin.Context) {
 	id := c.Param("id")
-	err := handler.CityAdminService.Delete(id)
+	err := handler.DistrictAdminService.Delete(id)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,

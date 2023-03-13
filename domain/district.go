@@ -11,9 +11,11 @@ type District struct {
 	ID        uuid.UUID      `json:"id"`
 	CityID    uuid.UUID      `json:"city_id"`
 	Name      string         `json:"name"`
+	Code      string         `json:"code"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `json:"deleted_at"`
+	City      *City          `gorm:"foreignKey:CityID" json:"city"`
 }
 
 func (district *District) BeforeCreate(tx *gorm.DB) (err error) {
@@ -25,4 +27,11 @@ func (district *District) BeforeCreate(tx *gorm.DB) (err error) {
 
 func (District) TableName() string {
 	return "districts"
+}
+
+// request to create new district
+type CreateDistrictRequest struct {
+	CityID string `json:"city_id"`
+	Name   string `json:"name"`
+	Code   string `json:"code"`
 }
