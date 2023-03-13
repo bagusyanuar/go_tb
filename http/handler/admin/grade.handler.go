@@ -11,28 +11,28 @@ import (
 	"gorm.io/gorm"
 )
 
-type DistrictHandler struct {
-	DistrictAdminService usecase.DistrictAdminService
+type GradeHandler struct {
+	GradeAdminService usecase.GradeAdminService
 }
 
-func NewDistrictHandler(districtAdminService usecase.DistrictAdminService) DistrictHandler {
-	return DistrictHandler{DistrictAdminService: districtAdminService}
+func NewGradeHandler(gradeAdminService usecase.GradeAdminService) GradeHandler {
+	return GradeHandler{GradeAdminService: gradeAdminService}
 }
 
-func (handler *DistrictHandler) RegisterRoute(route *gin.Engine) {
+func (handler *GradeHandler) RegisterRoute(route *gin.Engine) {
 	api := route.Group("/api/admin")
 	{
-		api.GET("/district", handler.Find)
-		api.POST("/district", handler.Create)
-		api.GET("/district/:id", handler.FindByID)
-		api.PATCH("/district/:id/patch", handler.Patch)
-		api.DELETE("/district/:id/delete", handler.Delete)
+		api.GET("/grade", handler.Find)
+		api.POST("/grade", handler.Create)
+		api.GET("/grade/:id", handler.FindByID)
+		api.PATCH("/grade/:id/patch", handler.Patch)
+		api.DELETE("/grade/:id/delete", handler.Delete)
 	}
 }
 
-func (handler *DistrictHandler) Find(c *gin.Context) {
+func (handler *GradeHandler) Find(c *gin.Context) {
 	param := c.Query("q")
-	data, err := handler.DistrictAdminService.FindAll(param)
+	data, err := handler.GradeAdminService.FindAll(param)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -48,9 +48,9 @@ func (handler *DistrictHandler) Find(c *gin.Context) {
 	})
 }
 
-func (handler *DistrictHandler) FindByID(c *gin.Context) {
+func (handler *GradeHandler) FindByID(c *gin.Context) {
 	id := c.Param("id")
-	data, err := handler.DistrictAdminService.FindByID(id)
+	data, err := handler.GradeAdminService.FindByID(id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.AbortWithStatusJSON(http.StatusNotFound, common.APIResponse{
@@ -74,10 +74,10 @@ func (handler *DistrictHandler) FindByID(c *gin.Context) {
 	})
 }
 
-func (handler *DistrictHandler) Create(c *gin.Context) {
-	var request domain.CreateDistrictRequest
+func (handler *GradeHandler) Create(c *gin.Context) {
+	var request domain.CreateGradeRequest
 	c.BindJSON(&request)
-	data, err := handler.DistrictAdminService.Create(request)
+	data, err := handler.GradeAdminService.Create(request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -93,11 +93,11 @@ func (handler *DistrictHandler) Create(c *gin.Context) {
 	})
 }
 
-func (handler *DistrictHandler) Patch(c *gin.Context) {
+func (handler *GradeHandler) Patch(c *gin.Context) {
 	id := c.Param("id")
-	var request domain.CreateDistrictRequest
+	var request domain.CreateGradeRequest
 	c.BindJSON(&request)
-	_, err := handler.DistrictAdminService.Patch(id, request)
+	data, err := handler.GradeAdminService.Patch(id, request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -109,13 +109,13 @@ func (handler *DistrictHandler) Patch(c *gin.Context) {
 	c.JSON(http.StatusOK, common.APIResponse{
 		Code:    http.StatusOK,
 		Message: "success",
-		Data:    nil,
+		Data:    data,
 	})
 }
 
-func (handler *DistrictHandler) Delete(c *gin.Context) {
+func (handler *GradeHandler) Delete(c *gin.Context) {
 	id := c.Param("id")
-	err := handler.DistrictAdminService.Delete(id)
+	err := handler.GradeAdminService.Delete(id)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,

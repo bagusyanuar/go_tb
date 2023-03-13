@@ -26,3 +26,8 @@ func (mentorLevel *MentorLevel) BeforeCreate(tx *gorm.DB) (err error) {
 func (MentorLevel) TableName() string {
 	return "mentor_levels"
 }
+
+//request to create new mentor level
+type CreateMentorLevelRequest struct {
+	Name string `json:"name"`
+}
