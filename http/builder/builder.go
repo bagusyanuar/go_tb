@@ -20,6 +20,7 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	districtAdminRepository := repository.NewDistrictAdminRepository(db)
 	gradeAdminRepository := repository.NewGradeAdminRepository(db)
 	mentorLevelAdminRepository := repository.NewMentorLevelAdminRepository(db)
+	subjectAdminRepository := repository.NewSubjectAdminRepository(db)
 
 	//member
 	authRepository := repository.NewAuthRepository(db)
@@ -44,6 +45,7 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	districtAdminService := service.NewDistrictAdminService(districtAdminRepository)
 	gradeAdminService := service.NewGradeAdminService(gradeAdminRepository)
 	mentorLevelAdminService := service.NewMentorLevelAdminService(mentorLevelAdminRepository)
+	subjectAdminService := service.NewSubjectAdminService(subjectAdminRepository)
 
 	//member
 	authService := service.NewAuthService(authRepository)
@@ -67,6 +69,7 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	districtAdminHandler := adminHandler.NewDistrictHandler(districtAdminService)
 	gradeAdminHandler := adminHandler.NewGradeHandler(gradeAdminService)
 	mentorLevelAdminHandler := adminHandler.NewMentorLevelHandler(mentorLevelAdminService)
+	subjectAdminHandler := adminHandler.NewSubjectHandler(subjectAdminService)
 
 	//member
 	authController := handler.NewAuthController(authService)
@@ -90,6 +93,7 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	districtAdminHandler.RegisterRoute(route)
 	gradeAdminHandler.RegisterRoute(route)
 	mentorLevelAdminHandler.RegisterRoute(route)
+	subjectAdminHandler.RegisterRoute(route)
 
 	//member
 	authController.Route(route)
