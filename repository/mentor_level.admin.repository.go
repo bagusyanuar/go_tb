@@ -11,6 +11,14 @@ type mentorLevelAdminRepositoryImplementation struct {
 	Database *gorm.DB
 }
 
+// FindBySlug implements usecase.MentorLevelAdminRepository
+func (repository *mentorLevelAdminRepositoryImplementation) FindBySlug(slug string) (data *domain.MentorLevel, err error) {
+	if err = repository.Database.Debug().Where("slug = ?", slug).First(&data).Error; err != nil {
+		return nil, err
+	}
+	return data, nil
+}
+
 // Create implements usecase.MentorLevelAdminRepository
 func (repository *mentorLevelAdminRepositoryImplementation) Create(entity domain.MentorLevel) (data *domain.MentorLevel, err error) {
 	if err = repository.Database.Debug().Omit(clause.Associations).Create(&entity).Error; err != nil {

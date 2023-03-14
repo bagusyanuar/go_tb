@@ -8,12 +8,13 @@ import (
 )
 
 type Grade struct {
-	ID        uuid.UUID      `json:"id"`
+	ID        uuid.UUID      `gorm:"primaryKey" json:"id"`
 	Name      string         `json:"name"`
 	Slug      string         `json:"slug"`
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `json:"deleted_at"`
+	Subject   []Subject      `gorm:"many2many:subject_grades;" json:"subjects"`
 }
 
 func (grade *Grade) BeforeCreate(tx *gorm.DB) (err error) {

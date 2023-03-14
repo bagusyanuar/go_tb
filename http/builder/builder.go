@@ -3,6 +3,7 @@ package builder
 import (
 	"github.com/bagusyanuar/go_tb/http/handler"
 	adminHandler "github.com/bagusyanuar/go_tb/http/handler/admin"
+	mentorHandler "github.com/bagusyanuar/go_tb/http/handler/mentor"
 	"github.com/bagusyanuar/go_tb/repository"
 	"github.com/bagusyanuar/go_tb/service"
 	"github.com/gin-gonic/gin"
@@ -36,6 +37,9 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	districtRepository := repository.NewDistrictRepository(db)
 	productCourseRepository := repository.NewProductCourseRepository(db)
 
+	//mentor
+	authMentorRepository := repository.NewAuthMentorRepository(db)
+
 	//build up service
 
 	//admin
@@ -59,6 +63,9 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	cityService := service.NewCityService(cityRepository)
 	districtService := service.NewDistrictService(districtRepository)
 	productCourseService := service.NewProductCourseService(productCourseRepository, mentorRepository, subjectRepository, gradeRepository)
+
+	//mentor
+	authMentorService := service.NewAuthMentorService(authMentorRepository, mentorLevelAdminRepository)
 
 	//build up http handler
 
@@ -84,6 +91,8 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	districtController := handler.NewDistrictController(districtService)
 	productCourseController := handler.NewProductCourseController(productCourseService)
 
+	//mentor
+	authMentorController := mentorHandler.NewAuthHandler(authMentorService)
 	//setup route
 
 	//admin
@@ -107,4 +116,7 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	cityController.Route(route)
 	districtController.Route(route)
 	productCourseController.Route(route)
+
+	//mentor
+	authMentorController.RegisterRoute(route)
 }

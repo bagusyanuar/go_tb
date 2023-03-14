@@ -2,9 +2,7 @@ package repository
 
 import (
 	"github.com/bagusyanuar/go_tb/domain"
-	"github.com/bagusyanuar/go_tb/model"
 	"github.com/bagusyanuar/go_tb/usecase"
-	"github.com/google/uuid"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
@@ -14,19 +12,25 @@ type subjectAdminRepositoryImplementation struct {
 }
 
 // AppendGrade implements usecase.SubjectAdminRepository
-func (repository *subjectAdminRepositoryImplementation) AppendGrade(id string, gradeIDS []uuid.UUID) (data *domain.Subject, err error) {
-	var entity domain.Subject
-	grades := []model.Grade{}
-	for _, v := range gradeIDS {
-		grades = append(grades, model.Grade{
-			ID: v,
-		})
+func (repository *subjectAdminRepositoryImplementation) AppendGrade(id string, entity []domain.SubjectGrade) (err error) {
+	tx := repository.Database.Debug().Begin()
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	if err = tx.Where("subject_id = ?", id).Delete(&domain.SubjectGrade{}).Error; err != nil {
+		tx.Rollback()
+		return err
 	}
 
-	if err = repository.Database.Debug().Where("id = ?", id).Model(&entity).Association("Grades").Append(grades); err != nil {
-		return nil, err
+	if err = tx.Create(&entity).Error; err != nil {
+		tx.Rollback()
+		return err
 	}
-	return &entity, nil
+	tx.Commit()
+	return nil
 
 }
 

@@ -8,7 +8,7 @@ import (
 )
 
 type Subject struct {
-	ID         uuid.UUID      `json:"id"`
+	ID         uuid.UUID      `gorm:"primaryKey" json:"id"`
 	CategoryID uuid.UUID      `json:"category_id"`
 	Name       string         `json:"name"`
 	Slug       string         `json:"slug"`
@@ -18,7 +18,7 @@ type Subject struct {
 	DeletedAt  gorm.DeletedAt `json:"deleted_at"`
 	Category   *Category      `gorm:"foreignKey:CategoryID" json:"category"`
 	// Grades     []Grade        `gorm:"many2many:subject_grades;joinForeignKey:subject_id;" json:"grades"`
-	Grades     []Grade        `gorm:"many2many:subject_grades;" json:"grades"`
+	Grades []Grade `gorm:"many2many:subject_grades;" json:"grades"`
 }
 
 func (subject *Subject) BeforeCreate(tx *gorm.DB) (err error) {
@@ -35,4 +35,8 @@ func (Subject) TableName() string {
 type CreateSubjectRequest struct {
 	CategoryID string `json:"category_id"`
 	Name       string `json:"name"`
+}
+
+type CreateSubjectAppendGradeRequest struct {
+	GradeIDS []string `json:"grade_ids"`
 }

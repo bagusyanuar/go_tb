@@ -27,6 +27,7 @@ func (handler *SubjectHandler) RegisterRoute(route *gin.Engine) {
 		api.GET("/subject/:id", handler.FindByID)
 		api.PATCH("/subject/:id/patch", handler.Patch)
 		api.DELETE("/subject/:id/delete", handler.Delete)
+		api.POST("/subject/:id/grades", handler.AppendGrade)
 	}
 }
 
@@ -77,7 +78,7 @@ func (handler *SubjectHandler) FindByID(c *gin.Context) {
 func (handler *SubjectHandler) Create(c *gin.Context) {
 	var request domain.CreateSubjectRequest
 	c.BindJSON(&request)
-	data , err := handler.SubjectAdminService.Create(request)
+	data, err := handler.SubjectAdminService.Create(request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -116,6 +117,26 @@ func (handler *SubjectHandler) Patch(c *gin.Context) {
 func (handler *SubjectHandler) Delete(c *gin.Context) {
 	id := c.Param("id")
 	err := handler.SubjectAdminService.Delete(id)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, common.APIResponse{
+		Code:    http.StatusOK,
+		Message: "success",
+		Data:    nil,
+	})
+}
+
+func (handler *SubjectHandler) AppendGrade(c *gin.Context) {
+	id := c.Param("id")
+	var request domain.CreateSubjectAppendGradeRequest
+	c.BindJSON(&request)
+	err := handler.SubjectAdminService.AppendGrade(id, request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,

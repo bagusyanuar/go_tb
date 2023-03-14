@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"github.com/bagusyanuar/go_tb/domain"
-	"github.com/google/uuid"
 )
 
 type SubjectAdminRepository interface {
@@ -11,7 +10,7 @@ type SubjectAdminRepository interface {
 	Create(entity domain.Subject) (data *domain.Subject, err error)
 	Patch(id string, entity domain.Subject) (data *domain.Subject, err error)
 	Delete(id string) (err error)
-	AppendGrade(id string, gradeIDS []uuid.UUID) (data *domain.Subject, err error)
+	AppendGrade(id string, entity []domain.SubjectGrade) (err error)
 }
 
 type SubjectAdminService interface {
@@ -20,4 +19,5 @@ type SubjectAdminService interface {
 	Create(request domain.CreateSubjectRequest) (data *domain.Subject, err error)
 	Patch(id string, request domain.CreateSubjectRequest) (data *domain.Subject, err error)
 	Delete(id string) (err error)
+	AppendGrade(id string, request domain.CreateSubjectAppendGradeRequest) (err error)
 }

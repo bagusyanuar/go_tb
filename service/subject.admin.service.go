@@ -11,6 +11,32 @@ type subjectAdminServiceImplementation struct {
 	SubjectAdminRepository usecase.SubjectAdminRepository
 }
 
+// AppendGrade implements usecase.SubjectAdminService
+func (service *subjectAdminServiceImplementation) AppendGrade(id string, request domain.CreateSubjectAppendGradeRequest) (err error) {
+	var gradeIDS []uuid.UUID
+	subjectId, err := uuid.Parse(id)
+	if err != nil {
+		return err
+	}
+
+	for _, gradeID := range request.GradeIDS {
+		gradeIDUUID, err := uuid.Parse(gradeID)
+		if err != nil {
+			return err
+		}
+		gradeIDS = append(gradeIDS, gradeIDUUID)
+	}
+
+	entity := []domain.SubjectGrade{}
+	for _, gradeID := range gradeIDS {
+		entity = append(entity, domain.SubjectGrade{
+			SubjectID: subjectId,
+			GradeID:   gradeID,
+		})
+	}
+	return service.SubjectAdminRepository.AppendGrade(id, entity)
+}
+
 // Create implements usecase.SubjectAdminService
 func (service *subjectAdminServiceImplementation) Create(request domain.CreateSubjectRequest) (data *domain.Subject, err error) {
 	categoryID, err := uuid.Parse(request.CategoryID)
@@ -19,7 +45,7 @@ func (service *subjectAdminServiceImplementation) Create(request domain.CreateSu
 	}
 	entity := domain.Subject{
 		Name:       request.Name,
-		Slug: common.MakeSlug(request.Name),
+		Slug:       common.MakeSlug(request.Name),
 		CategoryID: categoryID,
 	}
 	return service.SubjectAdminRepository.Create(entity)
@@ -48,7 +74,7 @@ func (service *subjectAdminServiceImplementation) Patch(id string, request domai
 	}
 	entity := domain.Subject{
 		Name:       request.Name,
-		Slug: common.MakeSlug(request.Name),
+		Slug:       common.MakeSlug(request.Name),
 		CategoryID: categoryID,
 	}
 	return service.SubjectAdminRepository.Patch(id, entity)
