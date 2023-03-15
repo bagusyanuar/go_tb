@@ -6,7 +6,7 @@ import (
 
 	"github.com/bagusyanuar/go_tb/common"
 	"github.com/bagusyanuar/go_tb/domain"
-	"github.com/bagusyanuar/go_tb/model"
+	"github.com/bagusyanuar/go_tb/exception"
 	"github.com/bagusyanuar/go_tb/usecase"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -17,8 +17,28 @@ type authMentorServiceImplementation struct {
 }
 
 // SignIn implements usecase.AuthMentorService
-func (*authMentorServiceImplementation) SignIn(request model.CreateMentorSignInRequest) (accessToken string, err error) {
-	panic("unimplemented")
+func (service *authMentorServiceImplementation) SignIn(request domain.CreateSignInMentorRequest) (accessToken string, err error) {
+	entity := domain.User{
+		Email: request.Email,
+	}
+
+	user, err := service.AuthMentorReposiotry.SignIn(entity)
+	if err != nil {
+		return "", err
+	}
+
+	err = bcrypt.CompareHashAndPassword([]byte(*user.Password), []byte(request.Password))
+	if err != nil {
+		return "", exception.ErrorPasswordNotMatch
+	}
+
+	jwtSign := common.JWTSignReturn{
+		ID:       user.ID,
+		Email:    user.Email,
+		Username: user.Username,
+		Role:     "mentor",
+	}
+	return common.CreateJWTAccessToken(&jwtSign)
 }
 
 // SignUp implements usecase.AuthMentorService

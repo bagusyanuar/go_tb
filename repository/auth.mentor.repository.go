@@ -2,7 +2,6 @@ package repository
 
 import (
 	"github.com/bagusyanuar/go_tb/domain"
-	"github.com/bagusyanuar/go_tb/model"
 	"github.com/bagusyanuar/go_tb/usecase"
 	"gorm.io/gorm"
 )
@@ -12,13 +11,20 @@ type authMentorRepositoryImplementation struct {
 }
 
 // SignIn implements usecase.AuthMentorRepository
-func (*authMentorRepositoryImplementation) SignIn(request model.CreateMentorSignInRequest) (data *domain.User, err error) {
-	panic("unimplemented")
+func (repository *authMentorRepositoryImplementation) SignIn(user domain.User) (data *domain.User, err error) {
+	var entity domain.User
+	if err = repository.Database.Debug().
+		Preload("Mentor").
+		Joins("JOIN mentors ON users.id = mentors.user_id").
+		Where("email = ?", user.Email).First(&entity).Error; err != nil {
+		return nil, err
+	}
+	return &entity, nil
 }
 
 // SignUp implements usecase.AuthMentorRepository
 func (repository *authMentorRepositoryImplementation) SignUp(user domain.User, mentor domain.Mentor) (data *domain.User, err error) {
-	tx := repository.Database.Begin()
+	tx := repository.Database.Debug().Begin()
 	defer func() {
 		if r := recover(); r != nil {
 			tx.Rollback()
