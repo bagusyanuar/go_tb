@@ -5,7 +5,9 @@ import (
 	adminHandler "github.com/bagusyanuar/go_tb/http/handler/admin"
 	mentorHandler "github.com/bagusyanuar/go_tb/http/handler/mentor"
 	"github.com/bagusyanuar/go_tb/repository"
+	mentorRepositoryUsecase "github.com/bagusyanuar/go_tb/repository/mentor"
 	"github.com/bagusyanuar/go_tb/service"
+	mentorServiceUsecase "github.com/bagusyanuar/go_tb/service/mentor"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -39,6 +41,7 @@ func Build(route *gin.Engine, db *gorm.DB) {
 
 	//mentor
 	authMentorRepository := repository.NewAuthMentorRepository(db)
+	profileMentorRepository := mentorRepositoryUsecase.NewProfileRepository(db)
 
 	//build up service
 
@@ -66,6 +69,7 @@ func Build(route *gin.Engine, db *gorm.DB) {
 
 	//mentor
 	authMentorService := service.NewAuthMentorService(authMentorRepository, mentorLevelAdminRepository)
+	profileMentorService := mentorServiceUsecase.NewProfileService(profileMentorRepository)
 
 	//build up http handler
 
@@ -93,6 +97,7 @@ func Build(route *gin.Engine, db *gorm.DB) {
 
 	//mentor
 	authMentorController := mentorHandler.NewAuthHandler(authMentorService)
+	profileMentorHandler := mentorHandler.NewProfileHandler(profileMentorService)
 	//setup route
 
 	//admin
@@ -119,4 +124,5 @@ func Build(route *gin.Engine, db *gorm.DB) {
 
 	//mentor
 	authMentorController.RegisterRoute(route)
+	profileMentorHandler.RegisterRoute(route)
 }

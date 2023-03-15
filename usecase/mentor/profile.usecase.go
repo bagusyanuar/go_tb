@@ -8,6 +8,6 @@ type ProfileRepository interface {
 	GetProfile(id string) (data *domain.User, err error)
 }
 
-type CategoryService interface {
+type ProfileService interface {
 	GetProfile(id string) (data *domain.User, err error)
 }
