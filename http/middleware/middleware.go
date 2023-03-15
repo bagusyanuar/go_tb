@@ -24,3 +24,7 @@ func Auth(c *gin.Context) {
 	c.Set("user", jwtClaim)
 	c.Next()
 }
+
+func Mentor(c *gin.Context) {
+
+}
