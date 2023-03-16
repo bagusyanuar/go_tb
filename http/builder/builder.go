@@ -18,6 +18,10 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	authAdminHandler := adminHandler.NewAuthHandler(authAdminService)
 	authAdminHandler.RegisterRoute(route)
 
+	categoryAdminRepository := usecaseAdminRepository.NewCategoryRepository(db)
+	categoryAdminService := usecaseAdminService.NewCategoryService(categoryAdminRepository)
+	categoryAdminHandler := adminHandler.NewCategoryHandler(categoryAdminService)
+	categoryAdminHandler.RegisterRoute(route)
 	// //admin
 	// categoryAdminRepository := repository.NewCategoryAdminRepository(db)
 	// provinceAdminRepository := repository.NewProvinceAdminRepository(db)
