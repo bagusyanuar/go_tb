@@ -3,6 +3,7 @@ package admin
 import (
 	"github.com/bagusyanuar/go_tb/common"
 	"github.com/bagusyanuar/go_tb/domain"
+	"github.com/bagusyanuar/go_tb/http/request"
 	usecaseAdmin "github.com/bagusyanuar/go_tb/usecase/admin"
 )
 
@@ -11,7 +12,7 @@ type implementationCategoryService struct {
 }
 
 // Create implements admin.CategoryService
-func (service *implementationCategoryService) Create(request domain.CreateCategoryRequest) (data *domain.Category, err error) {
+func (service *implementationCategoryService) Create(request request.CreateCategoryRequest) (data *domain.Category, err error) {
 	entity := domain.Category{
 		Name: request.Name,
 		Slug: common.MakeSlug(request.Name),
@@ -35,7 +36,7 @@ func (service *implementationCategoryService) FindByID(id string) (data *domain.
 }
 
 // Patch implements admin.CategoryService
-func (service *implementationCategoryService) Patch(id string, request domain.CreateCategoryRequest) (data *domain.Category, err error) {
+func (service *implementationCategoryService) Patch(id string, request request.CreateCategoryRequest) (data *domain.Category, err error) {
 	entity := domain.Category{
 		Name: request.Name,
 		Slug: common.MakeSlug(request.Name),

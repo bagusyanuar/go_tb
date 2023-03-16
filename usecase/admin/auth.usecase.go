@@ -11,5 +11,5 @@ type AuthRepository interface {
 
 type AuthService interface {
 	SignIn(request request.CreateAdminSignInRequest) (accessToken string, err error)
-	CheckConcurrent()
+	// CheckConcurrent()
 }

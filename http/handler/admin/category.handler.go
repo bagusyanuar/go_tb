@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/bagusyanuar/go_tb/common"
-	"github.com/bagusyanuar/go_tb/domain"
 	"github.com/bagusyanuar/go_tb/http/middleware"
+	"github.com/bagusyanuar/go_tb/http/request"
 	usecasAdmin "github.com/bagusyanuar/go_tb/usecase/admin"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -76,7 +76,7 @@ func (handler *CategoryHandler) FindByID(c *gin.Context) {
 }
 
 func (handler *CategoryHandler) Create(c *gin.Context) {
-	var request domain.CreateCategoryRequest
+	var request request.CreateCategoryRequest
 	c.BindJSON(&request)
 	_, err := handler.CategoryService.Create(request)
 	if err != nil {
@@ -96,7 +96,7 @@ func (handler *CategoryHandler) Create(c *gin.Context) {
 
 func (handler *CategoryHandler) Patch(c *gin.Context) {
 	id := c.Param("id")
-	var request domain.CreateCategoryRequest
+	var request request.CreateCategoryRequest
 	c.BindJSON(&request)
 	_, err := handler.CategoryService.Patch(id, request)
 	if err != nil {
