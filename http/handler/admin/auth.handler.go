@@ -1,7 +1,9 @@
 package admin
 
 import (
+	"fmt"
 	"net/http"
+	"sync"
 
 	"github.com/bagusyanuar/go_tb/common"
 	"github.com/bagusyanuar/go_tb/exception"
@@ -23,6 +25,7 @@ func (handler *AuthHandler) RegisterRoute(route *gin.Engine) {
 	api := route.Group("/api/admin")
 	{
 		api.POST("/sign-in", handler.SignIn)
+		api.POST("/goroutine", handler.CheckConcurrent)
 	}
 }
 
@@ -60,4 +63,26 @@ func (handler *AuthHandler) SignIn(c *gin.Context) {
 		Message: "success",
 		Data:    accessToken,
 	})
+}
+
+func (handler *AuthHandler) CheckConcurrent(c *gin.Context) {
+	// var wg sync.WaitGroup
+
+	// for i := 0; i < 5; i++ {
+	// 	data := fmt.Sprintf("data %d", i)
+	// 	wg.Add(1)
+	// 	go handler.doPrint(&wg, data)
+	// }
+	// wg.Wait()
+	handler.AuthService.CheckConcurrent()
+	c.JSON(http.StatusOK, common.APIResponse{
+		Code:    http.StatusOK,
+		Message: "success",
+		Data:    nil,
+	})
+}
+
+func (handler *AuthHandler) doPrint(wg *sync.WaitGroup, message string)  {
+	defer wg.Done()
+	fmt.Println(message)
 }
