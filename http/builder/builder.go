@@ -2,8 +2,11 @@ package builder
 
 import (
 	adminHandler "github.com/bagusyanuar/go_tb/http/handler/admin"
+	mentorHandler "github.com/bagusyanuar/go_tb/http/handler/mentor"
 	usecaseAdminRepository "github.com/bagusyanuar/go_tb/repository/admin"
+	usecaseMentorRepository "github.com/bagusyanuar/go_tb/repository/mentor"
 	usecaseAdminService "github.com/bagusyanuar/go_tb/service/admin"
+	usecaseMentorService "github.com/bagusyanuar/go_tb/service/mentor"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -12,7 +15,7 @@ func Build(route *gin.Engine, db *gorm.DB) {
 
 	//build up repository
 
-	//admin
+	// admin schema
 	authAdminRepository := usecaseAdminRepository.NewAuthRepository(db)
 	authAdminService := usecaseAdminService.NewAuthService(authAdminRepository)
 	authAdminHandler := adminHandler.NewAuthHandler(authAdminService)
@@ -52,6 +55,15 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	subjectAdminService := usecaseAdminService.NewSubjectService(subjectAdminRepository)
 	subjectAdminHandler := adminHandler.NewSubjectHandler(subjectAdminService)
 	subjectAdminHandler.RegisterRoute(route)
+
+	// mentor schema
+	mentorLevelMentorRepository := usecaseMentorRepository.NewMentorLevelRepository(db)
+	
+	authMentorRepository := usecaseMentorRepository.NewAuthRepository(db)
+	authMentorService := usecaseMentorService.NewAuthService(authMentorRepository, mentorLevelMentorRepository)
+	authMentorHandler := mentorHandler.NewAuthHandler(authMentorService)
+	authMentorHandler.RegisterRoute(route)
+
 	// //admin
 	// categoryAdminRepository := repository.NewCategoryAdminRepository(db)
 	// provinceAdminRepository := repository.NewProvinceAdminRepository(db)

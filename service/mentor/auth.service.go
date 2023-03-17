@@ -1,4 +1,4 @@
-package service
+package mentor
 
 import (
 	"encoding/json"
@@ -7,22 +7,23 @@ import (
 	"github.com/bagusyanuar/go_tb/common"
 	"github.com/bagusyanuar/go_tb/domain"
 	"github.com/bagusyanuar/go_tb/exception"
-	"github.com/bagusyanuar/go_tb/usecase"
+	"github.com/bagusyanuar/go_tb/http/request"
+	usecaseMentor "github.com/bagusyanuar/go_tb/usecase/mentor"
 	"golang.org/x/crypto/bcrypt"
 )
 
-type authMentorServiceImplementation struct {
-	AuthMentorReposiotry       usecase.AuthMentorRepository
-	MentorLevelAdminRepository usecase.MentorLevelAdminRepository
+type implementAuthService struct {
+	AuthRepository        usecaseMentor.AuthRepository
+	MentorLevelRepository usecaseMentor.MentorLevelAdminRepository
 }
 
-// SignIn implements usecase.AuthMentorService
-func (service *authMentorServiceImplementation) SignIn(request domain.CreateSignInMentorRequest) (accessToken string, err error) {
+// SignIn implements mentor.AuthMentorService
+func (service *implementAuthService) SignIn(request request.CreateSignInMentorRequest) (accessToken string, err error) {
 	entity := domain.User{
 		Email: request.Email,
 	}
 
-	user, err := service.AuthMentorReposiotry.SignIn(entity)
+	user, err := service.AuthRepository.SignIn(entity)
 	if err != nil {
 		return "", err
 	}
@@ -41,8 +42,8 @@ func (service *authMentorServiceImplementation) SignIn(request domain.CreateSign
 	return common.CreateJWTAccessToken(&jwtSign)
 }
 
-// SignUp implements usecase.AuthMentorService
-func (service *authMentorServiceImplementation) SignUp(request domain.CreateSignUpMentorRequest) (accessToken string, err error) {
+// SignUp implements mentor.AuthMentorService
+func (service *implementAuthService) SignUp(request request.CreateSignUpMentorRequest) (accessToken string, err error) {
 	roles, _ := json.Marshal([]string{"mentor"})
 	var password *string
 	if request.Password != "" {
@@ -54,7 +55,7 @@ func (service *authMentorServiceImplementation) SignUp(request domain.CreateSign
 		password = &tmp
 	}
 
-	mentorLevel, err := service.MentorLevelAdminRepository.FindBySlug("basic")
+	mentorLevel, err := service.MentorLevelRepository.GetDataBySlug("basic")
 	if err != nil {
 		return "", err
 	}
@@ -85,7 +86,7 @@ func (service *authMentorServiceImplementation) SignUp(request domain.CreateSign
 		Avatar:        request.Avatar,
 	}
 
-	user, e := service.AuthMentorReposiotry.SignUp(userEntity, mentorEntity)
+	user, e := service.AuthRepository.SignUp(userEntity, mentorEntity)
 	if e != nil {
 		return "", e
 	}
@@ -100,9 +101,9 @@ func (service *authMentorServiceImplementation) SignUp(request domain.CreateSign
 	return common.CreateJWTAccessToken(&jwtSign)
 }
 
-func NewAuthMentorService(authMentorReposiotry usecase.AuthMentorRepository, mentorLevelAdminRepository usecase.MentorLevelAdminRepository) usecase.AuthMentorService {
-	return &authMentorServiceImplementation{
-		AuthMentorReposiotry:       authMentorReposiotry,
-		MentorLevelAdminRepository: mentorLevelAdminRepository,
+func NewAuthService(authRepository usecaseMentor.AuthRepository, mentorLevelRepository usecaseMentor.MentorLevelAdminRepository) usecaseMentor.AuthService {
+	return &implementAuthService{
+		AuthRepository:        authRepository,
+		MentorLevelRepository: mentorLevelRepository,
 	}
 }

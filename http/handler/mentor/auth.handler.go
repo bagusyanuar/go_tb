@@ -4,19 +4,19 @@ import (
 	"net/http"
 
 	"github.com/bagusyanuar/go_tb/common"
-	"github.com/bagusyanuar/go_tb/domain"
 	"github.com/bagusyanuar/go_tb/exception"
-	"github.com/bagusyanuar/go_tb/usecase"
+	"github.com/bagusyanuar/go_tb/http/request"
+	usecaseMentor "github.com/bagusyanuar/go_tb/usecase/mentor"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 type AuthHandler struct {
-	AuthMentorService usecase.AuthMentorService
+	AuthService usecaseMentor.AuthService
 }
 
-func NewAuthHandler(authMentorService usecase.AuthMentorService) AuthHandler {
-	return AuthHandler{AuthMentorService: authMentorService}
+func NewAuthHandler(authService usecaseMentor.AuthService) AuthHandler {
+	return AuthHandler{AuthService: authService}
 }
 
 func (handler *AuthHandler) RegisterRoute(route *gin.Engine) {
@@ -28,9 +28,9 @@ func (handler *AuthHandler) RegisterRoute(route *gin.Engine) {
 }
 
 func (handler *AuthHandler) SignUp(c *gin.Context) {
-	var request domain.CreateSignUpMentorRequest
+	var request request.CreateSignUpMentorRequest
 	c.BindJSON(&request)
-	accessToken, err := handler.AuthMentorService.SignUp(request)
+	accessToken, err := handler.AuthService.SignUp(request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -47,9 +47,9 @@ func (handler *AuthHandler) SignUp(c *gin.Context) {
 }
 
 func (handler *AuthHandler) SignIn(c *gin.Context) {
-	var request domain.CreateSignInMentorRequest
+	var request request.CreateSignInMentorRequest
 	c.BindJSON(&request)
-	accessToken, err := handler.AuthMentorService.SignIn(request)
+	accessToken, err := handler.AuthService.SignIn(request)
 	if err != nil {
 		switch err {
 		case exception.ErrorPasswordNotMatch:
