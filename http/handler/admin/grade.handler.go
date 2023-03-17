@@ -5,18 +5,18 @@ import (
 	"net/http"
 
 	"github.com/bagusyanuar/go_tb/common"
-	"github.com/bagusyanuar/go_tb/domain"
-	"github.com/bagusyanuar/go_tb/usecase"
+	"github.com/bagusyanuar/go_tb/http/request"
+	usecaseAdmin "github.com/bagusyanuar/go_tb/usecase/admin"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 type GradeHandler struct {
-	GradeAdminService usecase.GradeAdminService
+	GradeService usecaseAdmin.GradeService
 }
 
-func NewGradeHandler(gradeAdminService usecase.GradeAdminService) GradeHandler {
-	return GradeHandler{GradeAdminService: gradeAdminService}
+func NewGradeHandler(gradeService usecaseAdmin.GradeService) GradeHandler {
+	return GradeHandler{GradeService: gradeService}
 }
 
 func (handler *GradeHandler) RegisterRoute(route *gin.Engine) {
@@ -32,7 +32,7 @@ func (handler *GradeHandler) RegisterRoute(route *gin.Engine) {
 
 func (handler *GradeHandler) Find(c *gin.Context) {
 	param := c.Query("q")
-	data, err := handler.GradeAdminService.FindAll(param)
+	data, err := handler.GradeService.FindAll(param)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -50,7 +50,7 @@ func (handler *GradeHandler) Find(c *gin.Context) {
 
 func (handler *GradeHandler) FindByID(c *gin.Context) {
 	id := c.Param("id")
-	data, err := handler.GradeAdminService.FindByID(id)
+	data, err := handler.GradeService.FindByID(id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.AbortWithStatusJSON(http.StatusNotFound, common.APIResponse{
@@ -75,9 +75,9 @@ func (handler *GradeHandler) FindByID(c *gin.Context) {
 }
 
 func (handler *GradeHandler) Create(c *gin.Context) {
-	var request domain.CreateGradeRequest
+	var request request.CreateGradeRequest
 	c.BindJSON(&request)
-	data, err := handler.GradeAdminService.Create(request)
+	data, err := handler.GradeService.Create(request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -95,9 +95,9 @@ func (handler *GradeHandler) Create(c *gin.Context) {
 
 func (handler *GradeHandler) Patch(c *gin.Context) {
 	id := c.Param("id")
-	var request domain.CreateGradeRequest
+	var request request.CreateGradeRequest
 	c.BindJSON(&request)
-	data, err := handler.GradeAdminService.Patch(id, request)
+	data, err := handler.GradeService.Patch(id, request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -115,7 +115,7 @@ func (handler *GradeHandler) Patch(c *gin.Context) {
 
 func (handler *GradeHandler) Delete(c *gin.Context) {
 	id := c.Param("id")
-	err := handler.GradeAdminService.Delete(id)
+	err := handler.GradeService.Delete(id)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,

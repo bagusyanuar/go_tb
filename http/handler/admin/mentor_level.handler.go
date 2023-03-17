@@ -5,18 +5,18 @@ import (
 	"net/http"
 
 	"github.com/bagusyanuar/go_tb/common"
-	"github.com/bagusyanuar/go_tb/domain"
-	"github.com/bagusyanuar/go_tb/usecase"
+	"github.com/bagusyanuar/go_tb/http/request"
+	usecaseAdmin "github.com/bagusyanuar/go_tb/usecase/admin"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 type MentorLevelHandler struct {
-	MentorLevelAdminService usecase.MentorLevelAdminService
+	MentorLevelService usecaseAdmin.MentorLevelAdminService
 }
 
-func NewMentorLevelHandler(mentorLevelAdminService usecase.MentorLevelAdminService) MentorLevelHandler {
-	return MentorLevelHandler{MentorLevelAdminService: mentorLevelAdminService}
+func NewMentorLevelHandler(mentorLevelService usecaseAdmin.MentorLevelAdminService) MentorLevelHandler {
+	return MentorLevelHandler{MentorLevelService: mentorLevelService}
 }
 
 func (handler *MentorLevelHandler) RegisterRoute(route *gin.Engine) {
@@ -32,7 +32,7 @@ func (handler *MentorLevelHandler) RegisterRoute(route *gin.Engine) {
 
 func (handler *MentorLevelHandler) Find(c *gin.Context) {
 	param := c.Query("q")
-	data, err := handler.MentorLevelAdminService.FindAll(param)
+	data, err := handler.MentorLevelService.FindAll(param)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -50,7 +50,7 @@ func (handler *MentorLevelHandler) Find(c *gin.Context) {
 
 func (handler *MentorLevelHandler) FindByID(c *gin.Context) {
 	id := c.Param("id")
-	data, err := handler.MentorLevelAdminService.FindByID(id)
+	data, err := handler.MentorLevelService.FindByID(id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.AbortWithStatusJSON(http.StatusNotFound, common.APIResponse{
@@ -75,9 +75,9 @@ func (handler *MentorLevelHandler) FindByID(c *gin.Context) {
 }
 
 func (handler *MentorLevelHandler) Create(c *gin.Context) {
-	var request domain.CreateMentorLevelRequest
+	var request request.CreateMentorLevelRequest
 	c.BindJSON(&request)
-	data, err := handler.MentorLevelAdminService.Create(request)
+	data, err := handler.MentorLevelService.Create(request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -95,9 +95,9 @@ func (handler *MentorLevelHandler) Create(c *gin.Context) {
 
 func (handler *MentorLevelHandler) Patch(c *gin.Context) {
 	id := c.Param("id")
-	var request domain.CreateMentorLevelRequest
+	var request request.CreateMentorLevelRequest
 	c.BindJSON(&request)
-	data, err := handler.MentorLevelAdminService.Patch(id, request)
+	data, err := handler.MentorLevelService.Patch(id, request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -115,7 +115,7 @@ func (handler *MentorLevelHandler) Patch(c *gin.Context) {
 
 func (handler *MentorLevelHandler) Delete(c *gin.Context) {
 	id := c.Param("id")
-	err := handler.MentorLevelAdminService.Delete(id)
+	err := handler.MentorLevelService.Delete(id)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,

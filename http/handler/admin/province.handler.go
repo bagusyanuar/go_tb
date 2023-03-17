@@ -5,18 +5,18 @@ import (
 	"net/http"
 
 	"github.com/bagusyanuar/go_tb/common"
-	"github.com/bagusyanuar/go_tb/domain"
-	"github.com/bagusyanuar/go_tb/usecase"
+	"github.com/bagusyanuar/go_tb/http/request"
+	usecaseAdmin "github.com/bagusyanuar/go_tb/usecase/admin"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 type ProvinceHandler struct {
-	ProvinceAdminService usecase.ProvinceAdminService
+	ProvinceService usecaseAdmin.ProvinceService
 }
 
-func NewProvinceHandler(provinceAdminService usecase.ProvinceAdminService) ProvinceHandler {
-	return ProvinceHandler{ProvinceAdminService: provinceAdminService}
+func NewProvinceHandler(provinceService usecaseAdmin.ProvinceService) ProvinceHandler {
+	return ProvinceHandler{ProvinceService: provinceService}
 }
 
 func (handler *ProvinceHandler) RegisterRoute(route *gin.Engine) {
@@ -32,7 +32,7 @@ func (handler *ProvinceHandler) RegisterRoute(route *gin.Engine) {
 
 func (handler *ProvinceHandler) Find(c *gin.Context) {
 	param := c.Query("q")
-	data, err := handler.ProvinceAdminService.FindAll(param)
+	data, err := handler.ProvinceService.FindAll(param)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -50,7 +50,7 @@ func (handler *ProvinceHandler) Find(c *gin.Context) {
 
 func (handler *ProvinceHandler) FindByID(c *gin.Context) {
 	id := c.Param("id")
-	data, err := handler.ProvinceAdminService.FindByID(id)
+	data, err := handler.ProvinceService.FindByID(id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.AbortWithStatusJSON(http.StatusNotFound, common.APIResponse{
@@ -75,9 +75,9 @@ func (handler *ProvinceHandler) FindByID(c *gin.Context) {
 }
 
 func (handler *ProvinceHandler) Create(c *gin.Context) {
-	var request domain.CreateProvinceRequest
+	var request request.CreateProvinceRequest
 	c.BindJSON(&request)
-	_, err := handler.ProvinceAdminService.Create(request)
+	_, err := handler.ProvinceService.Create(request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -95,9 +95,9 @@ func (handler *ProvinceHandler) Create(c *gin.Context) {
 
 func (handler *ProvinceHandler) Patch(c *gin.Context) {
 	id := c.Param("id")
-	var request domain.CreateProvinceRequest
+	var request request.CreateProvinceRequest
 	c.BindJSON(&request)
-	_, err := handler.ProvinceAdminService.Patch(id, request)
+	_, err := handler.ProvinceService.Patch(id, request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -115,7 +115,7 @@ func (handler *ProvinceHandler) Patch(c *gin.Context) {
 
 func (handler *ProvinceHandler) Delete(c *gin.Context) {
 	id := c.Param("id")
-	err := handler.ProvinceAdminService.Delete(id)
+	err := handler.ProvinceService.Delete(id)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,

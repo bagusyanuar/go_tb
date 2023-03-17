@@ -5,18 +5,18 @@ import (
 	"net/http"
 
 	"github.com/bagusyanuar/go_tb/common"
-	"github.com/bagusyanuar/go_tb/domain"
-	"github.com/bagusyanuar/go_tb/usecase"
+	"github.com/bagusyanuar/go_tb/http/request"
+	usecaseAdmin "github.com/bagusyanuar/go_tb/usecase/admin"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
 type DistrictHandler struct {
-	DistrictAdminService usecase.DistrictAdminService
+	DistrictService usecaseAdmin.DistrictService
 }
 
-func NewDistrictHandler(districtAdminService usecase.DistrictAdminService) DistrictHandler {
-	return DistrictHandler{DistrictAdminService: districtAdminService}
+func NewDistrictHandler(districtService usecaseAdmin.DistrictService) DistrictHandler {
+	return DistrictHandler{DistrictService: districtService}
 }
 
 func (handler *DistrictHandler) RegisterRoute(route *gin.Engine) {
@@ -32,7 +32,7 @@ func (handler *DistrictHandler) RegisterRoute(route *gin.Engine) {
 
 func (handler *DistrictHandler) Find(c *gin.Context) {
 	param := c.Query("q")
-	data, err := handler.DistrictAdminService.FindAll(param)
+	data, err := handler.DistrictService.FindAll(param)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -50,7 +50,7 @@ func (handler *DistrictHandler) Find(c *gin.Context) {
 
 func (handler *DistrictHandler) FindByID(c *gin.Context) {
 	id := c.Param("id")
-	data, err := handler.DistrictAdminService.FindByID(id)
+	data, err := handler.DistrictService.FindByID(id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			c.AbortWithStatusJSON(http.StatusNotFound, common.APIResponse{
@@ -75,9 +75,9 @@ func (handler *DistrictHandler) FindByID(c *gin.Context) {
 }
 
 func (handler *DistrictHandler) Create(c *gin.Context) {
-	var request domain.CreateDistrictRequest
+	var request request.CreateDistrictRequest
 	c.BindJSON(&request)
-	data, err := handler.DistrictAdminService.Create(request)
+	data, err := handler.DistrictService.Create(request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -95,9 +95,9 @@ func (handler *DistrictHandler) Create(c *gin.Context) {
 
 func (handler *DistrictHandler) Patch(c *gin.Context) {
 	id := c.Param("id")
-	var request domain.CreateDistrictRequest
+	var request request.CreateDistrictRequest
 	c.BindJSON(&request)
-	_, err := handler.DistrictAdminService.Patch(id, request)
+	_, err := handler.DistrictService.Patch(id, request)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
@@ -115,7 +115,7 @@ func (handler *DistrictHandler) Patch(c *gin.Context) {
 
 func (handler *DistrictHandler) Delete(c *gin.Context) {
 	id := c.Param("id")
-	err := handler.DistrictAdminService.Delete(id)
+	err := handler.DistrictService.Delete(id)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,

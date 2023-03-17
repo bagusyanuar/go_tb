@@ -22,6 +22,36 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	categoryAdminService := usecaseAdminService.NewCategoryService(categoryAdminRepository)
 	categoryAdminHandler := adminHandler.NewCategoryHandler(categoryAdminService)
 	categoryAdminHandler.RegisterRoute(route)
+
+	provinceAdminRepository := usecaseAdminRepository.NewProvinceRepository(db)
+	provinceAdminService := usecaseAdminService.NewProvinceService(provinceAdminRepository)
+	provinceAdminHandler := adminHandler.NewProvinceHandler(provinceAdminService)
+	provinceAdminHandler.RegisterRoute(route)
+
+	cityAdminRepository := usecaseAdminRepository.NewCityRepository(db)
+	cityAdminService := usecaseAdminService.NewCityService(cityAdminRepository)
+	cityAdminHandler := adminHandler.NewCityHandler(cityAdminService)
+	cityAdminHandler.RegisterRoute(route)
+
+	districtAdminRepository := usecaseAdminRepository.NewDistrictRepository(db)
+	districtAdminService := usecaseAdminService.NewDistrictService(districtAdminRepository)
+	districtAdminHandler := adminHandler.NewDistrictHandler(districtAdminService)
+	districtAdminHandler.RegisterRoute(route)
+
+	gradeAdminRepository := usecaseAdminRepository.NewGradeRepository(db)
+	gradeAdminService := usecaseAdminService.NewGradeService(gradeAdminRepository)
+	gradeAdminHandler := adminHandler.NewGradeHandler(gradeAdminService)
+	gradeAdminHandler.RegisterRoute(route)
+
+	mentorLevelAdminRepository := usecaseAdminRepository.NewMentorLevelRepository(db)
+	mentorLevelAdminService := usecaseAdminService.NewMentorLevelService(mentorLevelAdminRepository)
+	mentorLevelHandler := adminHandler.NewMentorLevelHandler(mentorLevelAdminService)
+	mentorLevelHandler.RegisterRoute(route)
+
+	subjectAdminRepository := usecaseAdminRepository.NewSubjectRepository(db)
+	subjectAdminService := usecaseAdminService.NewSubjectService(subjectAdminRepository)
+	subjectAdminHandler := adminHandler.NewSubjectHandler(subjectAdminService)
+	subjectAdminHandler.RegisterRoute(route)
 	// //admin
 	// categoryAdminRepository := repository.NewCategoryAdminRepository(db)
 	// provinceAdminRepository := repository.NewProvinceAdminRepository(db)

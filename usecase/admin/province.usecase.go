@@ -17,6 +17,6 @@ type ProvinceService interface {
 	FindAll(param string) (data []domain.Province, err error)
 	FindByID(id string) (data *domain.Province, err error)
 	Create(request request.CreateProvinceRequest) (data *domain.Province, err error)
-	Patch(id string, request domain.CreateProvinceRequest) (data *domain.Province, err error)
+	Patch(id string, request request.CreateProvinceRequest) (data *domain.Province, err error)
 	Delete(id string) (err error)
 }
