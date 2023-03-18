@@ -20,3 +20,17 @@ type CreateSignInMentorRequest struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
+
+type CreateSignUpMemberRequest struct {
+	Email    string `json:"email"`
+	Username string `json:"username"`
+	Password string `json:"password"`
+	Name     string `json:"name"`
+	Phone    string `json:"phone"`
+	Address  string `json:"address"`
+}
+
+type CreateSignInMemberRequest struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
