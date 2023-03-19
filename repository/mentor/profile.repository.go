@@ -10,6 +10,15 @@ type profileRepositoryImplementation struct {
 	Database *gorm.DB
 }
 
+// GetMyslug implements mentor.ProfileRepository
+func (repository *profileRepositoryImplementation) GetMyslug(id string) (slug string, err error) {
+	var data domain.Mentor
+	if err = repository.Database.Debug().Where("user_idid = ?", id).First(&data).Error; err != nil {
+		return "", err
+	}
+	return data.Slug, nil
+}
+
 // GetProfile implements mentor.ProfileRepository
 func (repository *profileRepositoryImplementation) GetProfile(id string) (data *domain.User, err error) {
 	if err = repository.Database.Debug().Where("id = ?", id).Preload("Mentor").First(&data).Error; err != nil {

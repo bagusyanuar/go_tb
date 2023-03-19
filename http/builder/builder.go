@@ -77,6 +77,11 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	subjectMentorHandler := mentorHandler.NewSubjectHandler(subjectMentorService)
 	subjectMentorHandler.RegisterRoute(route)
 
+	productCourseRepository := usecaseMentorRepository.NewProductCourseRepository(db)
+	productCourseService := usecaseMentorService.NewProductCourseService(productCourseRepository, profileMentorRepository)
+	productCourseHandler := mentorHandler.NewProductCourseHandler(productCourseService)
+	productCourseHandler.RegisterRoute(route)
+
 	//member schema
 	authMemberRepository := usecaseMemberRepository.NewAuthRepository(db)
 	authMemberService := usecaseMemberService.NewAuthService(authMemberRepository)

@@ -9,6 +9,11 @@ type profileServiceImplementation struct {
 	ProfileRepository mentorUsecase.ProfileRepository
 }
 
+// GetMyslug implements mentor.ProfileService
+func (service *profileServiceImplementation) GetMyslug(id string) (slug string, err error) {
+	return service.GetMyslug(id)
+}
+
 // GetProfile implements mentor.ProfileService
 func (service *profileServiceImplementation) GetProfile(id string) (data *domain.User, err error) {
 	return service.ProfileRepository.GetProfile(id)
