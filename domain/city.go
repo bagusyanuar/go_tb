@@ -29,10 +29,3 @@ func (city *City) BeforeCreate(tx *gorm.DB) (err error) {
 func (City) TableName() string {
 	return "cities"
 }
-
-//request to create new city
-type CreateCityRequest struct {
-	ProvinceID string `json:"province_id"`
-	Name       string `json:"name"`
-	Code       string `json:"code"`
-}

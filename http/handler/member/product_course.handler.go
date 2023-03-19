@@ -1,0 +1,42 @@
+package member
+
+import (
+	"net/http"
+
+	"github.com/bagusyanuar/go_tb/common"
+	usecaseMember "github.com/bagusyanuar/go_tb/usecase/member"
+	"github.com/gin-gonic/gin"
+)
+
+type ProductCourseHandler struct {
+	ProductCourseService usecaseMember.ProductCourseService
+}
+
+func NewProductCourseHandler(productCourseService usecaseMember.ProductCourseService) ProductCourseHandler {
+	return ProductCourseHandler{ProductCourseService: productCourseService}
+}
+
+func (handler *ProductCourseHandler) RegisterRoute(route *gin.Engine) {
+	api := route.Group("/api/member")
+	{
+		api.GET("/product-course", handler.GetData)
+	}
+}
+
+func (handler *ProductCourseHandler) GetData(c *gin.Context) {
+	param := c.Query("q")
+	data, err := handler.ProductCourseService.GetData(param)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, common.APIResponse{
+		Code:    http.StatusOK,
+		Message: "success",
+		Data:    data,
+	})
+}

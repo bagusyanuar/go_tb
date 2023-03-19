@@ -16,12 +16,13 @@ type ProductCourse struct {
 	Method      datatypes.JSON `json:"method"`
 	Slug        string         `json:"slug"`
 	IsAvailable bool           `json:"is_available"`
+	Price       int            `gorm:"->" json:"price"`
 	CreatedAt   time.Time      `gorm:"column:created_at;not null" json:"created_at"`
 	UpdatedAt   time.Time      `gorm:"column:updated_at;not null" json:"updated_at"`
 	DeletedAt   gorm.DeletedAt `gorm:"column:deleted_at;" json:"deleted_at"`
-	User        User           `gorm:"foreignKey:UserID;" json:"user"`
-	Subject     Subject        `gorm:"foreignKey:SubjectID;" json:"subject"`
-	Grade       Grade          `gorm:"foreignKey:GradeID;" json:"grade"`
+	User        *User          `gorm:"foreignKey:UserID;" json:"user"`
+	Subject     *Subject       `gorm:"foreignKey:SubjectID;" json:"subject"`
+	Grade       *Grade         `gorm:"foreignKey:GradeID;" json:"grade"`
 }
 
 func (productCourse *ProductCourse) BeforeCreate(tx *gorm.DB) (err error) {

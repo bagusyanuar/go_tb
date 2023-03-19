@@ -59,6 +59,11 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	subjectAdminHandler := adminHandler.NewSubjectHandler(subjectAdminService)
 	subjectAdminHandler.RegisterRoute(route)
 
+	pricingAdminRepository := usecaseAdminRepository.NewPricingRepository(db)
+	pricingAdminSevice := usecaseAdminService.NewPricingservice(pricingAdminRepository)
+	pricingAdminHandler := adminHandler.NewPricingHandler(pricingAdminSevice)
+	pricingAdminHandler.RegisterRoute(route)
+
 	// mentor schema
 	mentorLevelMentorRepository := usecaseMentorRepository.NewMentorLevelRepository(db)
 
@@ -79,15 +84,25 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	subjectMentorHandler := mentorHandler.NewSubjectHandler(subjectMentorService)
 	subjectMentorHandler.RegisterRoute(route)
 
-	productCourseRepository := usecaseMentorRepository.NewProductCourseRepository(db)
-	productCourseService := usecaseMentorService.NewProductCourseService(productCourseRepository, profileMentorRepository, subjectMentorRepository, gradeMentorRepository)
-	productCourseHandler := mentorHandler.NewProductCourseHandler(productCourseService)
-	productCourseHandler.RegisterRoute(route)
+	productCourseMentorRepository := usecaseMentorRepository.NewProductCourseRepository(db)
+	productCourseMentorService := usecaseMentorService.NewProductCourseService(productCourseMentorRepository, profileMentorRepository, subjectMentorRepository, gradeMentorRepository)
+	productCourseMentorHandler := mentorHandler.NewProductCourseHandler(productCourseMentorService)
+	productCourseMentorHandler.RegisterRoute(route)
+
+	areaMentorRepository := usecaseMentorRepository.NewAreaRepository(db)
+	areaMentorService := usecaseMentorService.NewAreaService(areaMentorRepository)
+	areaMentorHandler := mentorHandler.NewAreaHandler(areaMentorService)
+	areaMentorHandler.RegisterRoute(route)
 
 	//member schema
 	authMemberRepository := usecaseMemberRepository.NewAuthRepository(db)
 	authMemberService := usecaseMemberService.NewAuthService(authMemberRepository)
 	authMemberHandler := memberHandler.NewAuthHandler(authMemberService)
 	authMemberHandler.RegisterRoute(route)
+
+	productCourseMemberRepository := usecaseMemberRepository.NewProductCourseRepository(db)
+	productCourseMemberService := usecaseMemberService.NewProductCourseService(productCourseMemberRepository)
+	productCourseMemberHandler := memberHandler.NewProductCourseHandler(productCourseMemberService)
+	productCourseMemberHandler.RegisterRoute(route)
 
 }

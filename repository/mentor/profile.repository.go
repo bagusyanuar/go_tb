@@ -21,7 +21,7 @@ func (repository *profileRepositoryImplementation) GetMyslug(id string) (slug st
 
 // GetProfile implements mentor.ProfileRepository
 func (repository *profileRepositoryImplementation) GetProfile(id string) (data *domain.User, err error) {
-	if err = repository.Database.Debug().Where("id = ?", id).Preload("Mentor").First(&data).Error; err != nil {
+	if err = repository.Database.Debug().Where("id = ?", id).Preload("Mentor").Preload("Areas").First(&data).Error; err != nil {
 		return nil, err
 	}
 	return data, nil

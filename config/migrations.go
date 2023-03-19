@@ -157,3 +157,18 @@ type ProductCourse struct {
 	UpdatedAt   time.Time      `gorm:"column:updated_at;not null" json:"updated_at"`
 	DeletedAt   gorm.DeletedAt `gorm:"column:deleted_at;" json:"deleted_at"`
 }
+
+type Pricing struct {
+	ID            uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"id"`
+	GradeID       uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_grade_id;" json:"grade_id"`
+	CityID        uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_city_id;" json:"city_id"`
+	MentorLevelID uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_mentor_level_id;" json:"mentor_level_id"`
+	Method        uint           `gorm:"type:int(11);not null;" json:"method"`
+	Price         uint           `gorm:"type:int(11);not null;default:0;" json:"price"`
+	CreatedAt     time.Time      `gorm:"column:created_at;not null" json:"created_at"`
+	UpdatedAt     time.Time      `gorm:"column:updated_at;not null" json:"updated_at"`
+	DeletedAt     gorm.DeletedAt `gorm:"column:deleted_at;" json:"deleted_at"`
+	Grade         *Grade         `gorm:"foreignKey:GradeID"`
+	City          *City          `gorm:"foreignKey:CityID"`
+	MentorLevel   *MentorLevel   `gorm:"foreignKey:MentorLevelID"`
+}

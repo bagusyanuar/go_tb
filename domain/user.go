@@ -18,6 +18,7 @@ type User struct {
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `json:"deleted_at"`
 	Mentor    *Mentor        `gorm:"foreignKey:UserID" json:"mentor"`
+	Areas     []District     `gorm:"many2many:user_districts;" json:"areas"`
 }
 
 func (user *User) BeforeCreate(tx *gorm.DB) (err error) {
@@ -29,20 +30,4 @@ func (user *User) BeforeCreate(tx *gorm.DB) (err error) {
 
 func (User) TableName() string {
 	return "users"
-}
-
-type CreateSignUpMentorRequest struct {
-	Email    string `json:"email"`
-	Username string `json:"username"`
-	Password string `json:"password"`
-	Name     string `json:"name"`
-	Gender   string `json:"gender"`
-	Phone    string `json:"phone"`
-	Address  string `json:"address"`
-	Avatar   string `json:"avatar"`
-}
-
-type CreateSignInMentorRequest struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
 }
