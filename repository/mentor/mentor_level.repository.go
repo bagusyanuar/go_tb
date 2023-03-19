@@ -34,7 +34,7 @@ func (repository *implementMentorLevelRepository) GetDataByID(id string) (data *
 	return data, nil
 }
 
-func NewMentorLevelRepository(database *gorm.DB) usecaseMentor.MentorLevelAdminRepository {
+func NewMentorLevelRepository(database *gorm.DB) usecaseMentor.MentorLevelRepository {
 	return &implementMentorLevelRepository{
 		Database: database,
 	}

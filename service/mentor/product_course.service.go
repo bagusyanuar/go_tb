@@ -2,6 +2,7 @@ package mentor
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/bagusyanuar/go_tb/domain"
 	"github.com/bagusyanuar/go_tb/http/request"
@@ -12,6 +13,8 @@ import (
 type implementProductCourseService struct {
 	ProductCourseRpository usecaseMentor.ProductCourseRepository
 	ProfileRepository      usecaseMentor.ProfileRepository
+	SubjectRepository      usecaseMentor.SubjectRepository
+	GradeRepository        usecaseMentor.GradeRepository
 }
 
 // CreateMyProductCourse implements mentor.ProductCourseService
@@ -31,11 +34,22 @@ func (service *implementProductCourseService) CreateMyProductCourse(userID strin
 		return nil, err
 	}
 
-	slug, err := service.ProfileRepository.GetMyslug(userID)
+	slugSubject, err := service.SubjectRepository.GetDataByID(request.SubjectID)
 	if err != nil {
 		return nil, err
 	}
 
+	slugGrade, err := service.GradeRepository.GetDataByID(request.GradeID)
+	if err != nil {
+		return nil, err
+	}
+
+	slugProfile, err := service.ProfileRepository.GetMyslug(userID)
+	if err != nil {
+		return nil, err
+	}
+
+	slug := fmt.Sprintf("%s-%s-%s", slugSubject.Slug, slugGrade.Slug, slugProfile)
 	methods, _ := json.Marshal(request.Method)
 	entity := domain.ProductCourse{
 		UserID:      userUUID,
@@ -49,13 +63,15 @@ func (service *implementProductCourseService) CreateMyProductCourse(userID strin
 }
 
 // GetMyProductCourse implements mentor.ProductCourseService
-func (*implementProductCourseService) GetMyProductCourse(id string) (data []domain.ProductCourse, err error) {
-	panic("unimplemented")
+func (service *implementProductCourseService) GetMyProductCourse(id string) (data []domain.ProductCourse, err error) {
+	return service.ProductCourseRpository.GetMyProductCourse(id)
 }
 
-func NewProductCourseService(productCourseRpository usecaseMentor.ProductCourseRepository, profileRepository usecaseMentor.ProfileRepository) usecaseMentor.ProductCourseService {
+func NewProductCourseService(productCourseRpository usecaseMentor.ProductCourseRepository, profileRepository usecaseMentor.ProfileRepository, subjectRepository usecaseMentor.SubjectRepository, gradeRepository usecaseMentor.GradeRepository) usecaseMentor.ProductCourseService {
 	return &implementProductCourseService{
 		ProductCourseRpository: productCourseRpository,
 		ProfileRepository:      profileRepository,
+		SubjectRepository:      subjectRepository,
+		GradeRepository:        gradeRepository,
 	}
 }

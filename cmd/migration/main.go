@@ -27,6 +27,7 @@ func main() {
 	database.AutoMigrate(config.ProductCourse{})
 
 	database.SetupJoinTable(&config.Subject{}, "Grades", &config.Grade{})
+	database.SetupJoinTable(&config.User{}, "Districts", &config.District{})
 	log.Println("success migrate database")
 
 	if err := database.AutoMigrate(&config.User{}); err == nil && database.Migrator().HasTable(&config.User{}) {

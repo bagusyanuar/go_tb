@@ -18,6 +18,7 @@ type User struct {
 	CreatedAt time.Time      `gorm:"column:created_at;not null" json:"created_at"`
 	UpdatedAt time.Time      `gorm:"column:updated_at;not null" json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;" json:"deleted_at"`
+	Districts []District     `gorm:"many2many:user_districts" json:"districts"`
 }
 
 type Member struct {
@@ -89,7 +90,7 @@ type City struct {
 	CreatedAt  time.Time      `gorm:"column:created_at;not null" json:"created_at"`
 	UpdatedAt  time.Time      `gorm:"column:updated_at;not null" json:"updated_at"`
 	DeletedAt  gorm.DeletedAt `gorm:"column:deleted_at;" json:"deleted_at"`
-	Province	*Province `gorm:"foreignKey:ProvinceID"`
+	Province   *Province      `gorm:"foreignKey:ProvinceID"`
 }
 
 type District struct {
@@ -100,7 +101,7 @@ type District struct {
 	CreatedAt time.Time      `gorm:"column:created_at;not null" json:"created_at"`
 	UpdatedAt time.Time      `gorm:"column:updated_at;not null" json:"updated_at"`
 	DeletedAt gorm.DeletedAt `gorm:"column:deleted_at;" json:"deleted_at"`
-	City	*City `gorm:"foreignKey:CityID"`
+	City      *City          `gorm:"foreignKey:CityID"`
 }
 
 type genderType string

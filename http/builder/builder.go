@@ -62,6 +62,8 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	// mentor schema
 	mentorLevelMentorRepository := usecaseMentorRepository.NewMentorLevelRepository(db)
 
+	gradeMentorRepository := usecaseMentorRepository.NewGradeRepository(db)
+
 	authMentorRepository := usecaseMentorRepository.NewAuthRepository(db)
 	authMentorService := usecaseMentorService.NewAuthService(authMentorRepository, mentorLevelMentorRepository)
 	authMentorHandler := mentorHandler.NewAuthHandler(authMentorService)
@@ -78,7 +80,7 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	subjectMentorHandler.RegisterRoute(route)
 
 	productCourseRepository := usecaseMentorRepository.NewProductCourseRepository(db)
-	productCourseService := usecaseMentorService.NewProductCourseService(productCourseRepository, profileMentorRepository)
+	productCourseService := usecaseMentorService.NewProductCourseService(productCourseRepository, profileMentorRepository, subjectMentorRepository, gradeMentorRepository)
 	productCourseHandler := mentorHandler.NewProductCourseHandler(productCourseService)
 	productCourseHandler.RegisterRoute(route)
 

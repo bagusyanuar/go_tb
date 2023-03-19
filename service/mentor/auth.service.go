@@ -14,7 +14,7 @@ import (
 
 type implementAuthService struct {
 	AuthRepository        usecaseMentor.AuthRepository
-	MentorLevelRepository usecaseMentor.MentorLevelAdminRepository
+	MentorLevelRepository usecaseMentor.MentorLevelRepository
 }
 
 // SignIn implements mentor.AuthMentorService
@@ -101,7 +101,7 @@ func (service *implementAuthService) SignUp(request request.CreateSignUpMentorRe
 	return common.CreateJWTAccessToken(&jwtSign)
 }
 
-func NewAuthService(authRepository usecaseMentor.AuthRepository, mentorLevelRepository usecaseMentor.MentorLevelAdminRepository) usecaseMentor.AuthService {
+func NewAuthService(authRepository usecaseMentor.AuthRepository, mentorLevelRepository usecaseMentor.MentorLevelRepository) usecaseMentor.AuthService {
 	return &implementAuthService{
 		AuthRepository:        authRepository,
 		MentorLevelRepository: mentorLevelRepository,

@@ -13,7 +13,7 @@ type profileRepositoryImplementation struct {
 // GetMyslug implements mentor.ProfileRepository
 func (repository *profileRepositoryImplementation) GetMyslug(id string) (slug string, err error) {
 	var data domain.Mentor
-	if err = repository.Database.Debug().Where("user_idid = ?", id).First(&data).Error; err != nil {
+	if err = repository.Database.Debug().Where("user_id = ?", id).First(&data).Error; err != nil {
 		return "", err
 	}
 	return data.Slug, nil

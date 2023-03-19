@@ -17,7 +17,13 @@ func BuildSheme(db *gorm.DB) *gin.Engine {
 			"version":  "1.0.0",
 		})
 	})
-
+	route.NoRoute(func(ctx *gin.Context) {
+		ctx.JSON(http.StatusNotFound, gin.H{
+			"code":    http.StatusNotFound,
+			"message": "route not found",
+			"data":    nil,
+		})
+	})
 	builder.Build(route, db)
 	return route
 }

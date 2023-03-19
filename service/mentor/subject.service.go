@@ -9,6 +9,11 @@ type implementSubjectService struct {
 	SubjectRepository usecaseMentor.SubjectRepository
 }
 
+// GetDataByID implements mentor.SubjectService
+func (service *implementSubjectService) GetDataByID(id string) (data *domain.Subject, err error) {
+	return service.SubjectRepository.GetDataByID(id)
+}
+
 // GetData implements mentor.SubjectService
 func (service *implementSubjectService) GetData(param string) (data []domain.Subject, err error) {
 	return service.SubjectRepository.GetData(param)

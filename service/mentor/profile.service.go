@@ -11,7 +11,7 @@ type profileServiceImplementation struct {
 
 // GetMyslug implements mentor.ProfileService
 func (service *profileServiceImplementation) GetMyslug(id string) (slug string, err error) {
-	return service.GetMyslug(id)
+	return service.ProfileRepository.GetMyslug(id)
 }
 
 // GetProfile implements mentor.ProfileService

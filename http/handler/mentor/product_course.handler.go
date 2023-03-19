@@ -22,6 +22,7 @@ func NewProductCourseHandler(productCourseService usecaseMentor.ProductCourseSer
 func (handler *ProductCourseHandler) RegisterRoute(route *gin.Engine) {
 	api := route.Group("/api/mentor")
 	{
+		api.GET("/product-course", middleware.Auth, handler.GetMyProductCourse)
 		api.POST("/product-course", middleware.Auth, handler.CreateMyProductCourse)
 	}
 }
@@ -32,6 +33,26 @@ func (handler *ProductCourseHandler) CreateMyProductCourse(c *gin.Context) {
 	authorizedUser := c.MustGet("user").(jwt.MapClaims)
 	authorizedUserID := authorizedUser["unique"].(string)
 	data, err := handler.ProductCourseService.CreateMyProductCourse(authorizedUserID, request)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
+			Code:    http.StatusInternalServerError,
+			Message: err.Error(),
+			Data:    nil,
+		})
+		return
+	}
+	c.JSON(http.StatusOK, common.APIResponse{
+		Code:    http.StatusOK,
+		Message: "success",
+		Data:    data,
+	})
+}
+
+func (handler *ProductCourseHandler) GetMyProductCourse(c *gin.Context) {
+
+	authorizedUser := c.MustGet("user").(jwt.MapClaims)
+	authorizedUserID := authorizedUser["unique"].(string)
+	data, err := handler.ProductCourseService.GetMyProductCourse(authorizedUserID)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,

@@ -10,6 +10,16 @@ type implementSubjectRepository struct {
 	Database *gorm.DB
 }
 
+// GetDataByID implements mentor.SubjectRepository
+func (repository *implementSubjectRepository) GetDataByID(id string) (data *domain.Subject, err error) {
+	if err = repository.Database.Debug().
+		Where("id = ?", id).
+		First(&data).Error; err != nil {
+		return data, err
+	}
+	return data, nil
+}
+
 // GetData implements mentor.SubjectRepository
 func (repository *implementSubjectRepository) GetData(param string) (data []domain.Subject, err error) {
 	if err = repository.Database.Debug().
