@@ -24,8 +24,10 @@ func (handler *ProductCourseHandler) RegisterRoute(route *gin.Engine) {
 }
 
 func (handler *ProductCourseHandler) GetData(c *gin.Context) {
-	param := c.Query("q")
-	data, err := handler.ProductCourseService.GetData(param)
+	subjectID := c.Query("subject")
+	gradeID := c.Query("grade")
+	cityID := c.Query("city")
+	data, err := handler.ProductCourseService.GetData(subjectID, gradeID, cityID)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, common.APIResponse{
 			Code:    http.StatusInternalServerError,
