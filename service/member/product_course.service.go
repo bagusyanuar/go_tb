@@ -10,8 +10,8 @@ type implementProductCourseService struct {
 }
 
 // GetData implements member.ProductCourseService
-func (service *implementProductCourseService) GetData(param string) (data []domain.ProductCourse, err error) {
-	return service.ProductCourseRepository.GetData(param)
+func (service *implementProductCourseService) GetData(subjectID string, gradeID string, cityID string) (data []domain.ProductCourse, err error) {
+	return service.ProductCourseRepository.GetData(subjectID, gradeID, cityID)
 }
 
 func NewProductCourseService(productCourseRepository usecaseMember.ProductCourseRepository) usecaseMember.ProductCourseService {
