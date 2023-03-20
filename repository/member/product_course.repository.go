@@ -12,6 +12,18 @@ type implementProductCourseRepository struct {
 	Database *gorm.DB
 }
 
+// Check implements member.ProductCourseRepository
+func (repository *implementProductCourseRepository) Check() (data []domain.ProductCourse, err error) {
+	if err = repository.Database.Debug().
+		Model(&domain.ProductCourse{}).
+		Preload("User").
+		Preload("User.Areas").
+		Find(&data).Error; err != nil {
+		return data, err
+	}
+	return data, nil
+}
+
 // GetData implements member.ProductCourseRepository
 func (repository *implementProductCourseRepository) GetData(subjectID string, gradeID string, cityID string) (data []domain.ProductCourse, err error) {
 	var d []domain.ProductCourse

@@ -31,13 +31,24 @@ type CreateProductCourseRequest struct {
 
 type APIProductCourseResponse struct {
 	ProductCourse
-	User    withUserScheme `gorm:"foreignKey:UserID;" json:"user"`
-	Subject Subject        `json:"subject"`
-	Grade   Grade          `json:"grade"`
+	User    *WithUserScheme `gorm:"foreignKey:UserID;" json:"user"`
+	Subject *Subject        `json:"subject"`
+	Grade   *Grade          `json:"grade"`
 }
 
-type withUserScheme struct {
-	ID       uuid.UUID `json:"id"`
-	Email    string    `json:"email"`
-	Username string    `json:"username"`
+type WithUserScheme struct {
+	ID       uuid.UUID            `json:"id"`
+	Email    string               `json:"email"`
+	Username string               `json:"username"`
+	Area     []WithDistrictScheme `json:"areas"`
+}
+
+type WithDistrictScheme struct {
+	ID   uuid.UUID `json:"id"`
+	Name string    `json:"name"`
+	Code string    `json:"code"`
+}
+
+func (wU *WithUserScheme) TableName() string {
+	return "users"
 }
