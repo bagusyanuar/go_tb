@@ -100,9 +100,16 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	authMemberHandler := memberHandler.NewAuthHandler(authMemberService)
 	authMemberHandler.RegisterRoute(route)
 
+	categoryMemberRepository := usecaseMemberRepository.NewCategoryRepository(db)
+	categoryMemberService := usecaseMemberService.NewCategoryService(categoryMemberRepository)
+	categoryMemberHandler := memberHandler.NewCategoryHandler(categoryMemberService)
+	categoryMemberHandler.RegisterRoute(route)
+
 	productCourseMemberRepository := usecaseMemberRepository.NewProductCourseRepository(db)
 	productCourseMemberService := usecaseMemberService.NewProductCourseService(productCourseMemberRepository)
 	productCourseMemberHandler := memberHandler.NewProductCourseHandler(productCourseMemberService)
 	productCourseMemberHandler.RegisterRoute(route)
+
+
 
 }
