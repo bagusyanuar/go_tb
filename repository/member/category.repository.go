@@ -12,7 +12,7 @@ type implementCategoryRepository struct {
 
 // GetData implements member.CategoryRepository
 func (repository *implementCategoryRepository) GetData(q string) (data []domain.Category, err error) {
-	if err = repository.Database.Debug().Where("name LIKE ?", "%"+q+"%").Find(&data).Error; err != nil {
+	if err = repository.Database.Debug().Preload("Subjects").Where("name LIKE ?", "%"+q+"%").Find(&data).Error; err != nil {
 		return data, err
 	}
 	return data, nil

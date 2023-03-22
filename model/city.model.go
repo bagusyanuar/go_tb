@@ -4,19 +4,26 @@ import (
 	"github.com/google/uuid"
 )
 
-type CreateCityRequest struct {
-	ProvinceID string `json:"province_id"`
-	Name       string `json:"name"`
+type City struct {
+	ID   uuid.UUID `json:"id"`
+	Name string    `json:"name"`
+	Code string    `json:"code"`
 }
 
 type APICityResponse struct {
-	ID         uuid.UUID     `json:"id"`
-	ProvinceID uuid.UUID     `json:"province_id"`
-	Name       string        `json:"name"`
-	Province   *withProvince `gorm:"foreignKey:ProvinceID" json:"province"`
+	City
+	Province  *CityWithProvinceScheme  `json:"province"`
+	Districts []CityWithDistrictScheme `json:"districts"`
 }
 
-type withProvince struct {
+type CityWithProvinceScheme struct {
 	ID   uuid.UUID `json:"id"`
 	Name string    `json:"name"`
+	Code string    `json:"code"`
+}
+
+type CityWithDistrictScheme struct {
+	ID   uuid.UUID `json:"id"`
+	Name string    `json:"name"`
+	Code string    `json:"code"`
 }

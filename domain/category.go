@@ -14,7 +14,7 @@ type Category struct {
 	CreatedAt time.Time      `json:"created_at"`
 	UpdatedAt time.Time      `json:"updated_at"`
 	DeletedAt gorm.DeletedAt `json:"deleted_at"`
-	Subject   []Subject      `gorm:"foreignKey:CategoryID" json:"subjects"`
+	Subjects  []Subject      `gorm:"foreignKey:CategoryID" json:"subjects"`
 }
 
 func (category *Category) BeforeCreate(tx *gorm.DB) (err error) {

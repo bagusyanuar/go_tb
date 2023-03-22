@@ -10,6 +10,7 @@ import (
 
 func BuildSheme(db *gorm.DB) *gin.Engine {
 	route := gin.Default()
+	route.Use(gin.Recovery())
 	route.SetTrustedProxies([]string{"127.0.0.1", "localhost"})
 	route.GET("/", func(ctx *gin.Context) {
 		ctx.JSON(http.StatusOK, gin.H{
