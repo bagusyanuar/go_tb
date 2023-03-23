@@ -144,7 +144,7 @@ type SubjectGrade struct {
 
 type ProductCourse struct {
 	ID          uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;primaryKey;" json:"id"`
-	UserID      uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_user_id,unique;" json:"user_id"`
+	UserID      uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_user_id;" json:"user_id"`
 	SubjectID   uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_subject_id;" json:"subject_id"`
 	GradeID     uuid.UUID      `gorm:"type:char(36) CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;index:idx_grade_id;" json:"grade_id"`
 	Method      datatypes.JSON `gorm:"type:longtext;not null" json:"method"`

@@ -1,24 +1,17 @@
 package model
 
 import (
-	"time"
-
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 type District struct {
-	ID        uuid.UUID      `json:"id"`
-	CityID    uuid.UUID      `json:"city_id"`
-	Name      string         `json:"name"`
-	Code      string         `json:"code"`
-	CreatedAt time.Time      `json:"created_at"`
-	UpdatedAt time.Time      `json:"updated_at"`
-	DeletedAt gorm.DeletedAt `json:"deleted_at"`
-}
-type CreateDistrictRequest struct {
-	CityID string `json:"city_id"`
-	Name   string `json:"name"`
+	ID     uuid.UUID `json:"id"`
+	CityID uuid.UUID `json:"city_id"`
+	Name   string    `json:"name"`
+	Code   string    `json:"code"`
+	// CreatedAt time.Time      `json:"created_at"`
+	// UpdatedAt time.Time      `json:"updated_at"`
+	// DeletedAt gorm.DeletedAt `json:"deleted_at"`
 }
 
 type APIDistrictResponse struct {

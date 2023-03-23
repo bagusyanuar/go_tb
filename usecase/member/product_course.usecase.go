@@ -11,6 +11,6 @@ type ProductCourseRepository interface {
 }
 
 type ProductCourseService interface {
-	GetData(subjectID string, gradeID string, cityID string) (data []domain.ProductCourse, err error)
+	GetData(subjectID string, gradeID string, cityID string) (data []model.APIProductCourseResponse, err error)
 	Check() (data []model.APIProductCourseResponse, err error)
 }

@@ -14,4 +14,11 @@ type Subject struct {
 
 type APISubjectResponse struct {
 	Subject
+	Grades []SubjectWithGradeScheme `json:"grades"`
+}
+
+type SubjectWithGradeScheme struct {
+	ID   uuid.UUID `json:"id"`
+	Name string    `json:"name"`
+	Slug string    `json:"slug"`
 }

@@ -110,6 +110,16 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	cityMemberHandler := memberHandler.NewCityHandler(cityMemberService)
 	cityMemberHandler.RegisterRoute(route)
 
+	districtMemberRepository := usecaseMemberRepository.NewDistrictRepository(db)
+	districtMemberService := usecaseMemberService.NewDistrictService(districtMemberRepository)
+	districtMemberHandler := memberHandler.NewDistrictHandler(districtMemberService)
+	districtMemberHandler.RegisterRoute(route)
+
+	subjectMemberRepository := usecaseMemberRepository.NewSubjectRepository(db)
+	subjectMemberService := usecaseMemberService.NewSubjectService(subjectMemberRepository)
+	subjectMemberHandler := memberHandler.NewSubjectHandler(subjectMemberService)
+	subjectMemberHandler.RegisterRoute(route)
+
 	productCourseMemberRepository := usecaseMemberRepository.NewProductCourseRepository(db)
 	productCourseMemberService := usecaseMemberService.NewProductCourseService(productCourseMemberRepository)
 	productCourseMemberHandler := memberHandler.NewProductCourseHandler(productCourseMemberService)
