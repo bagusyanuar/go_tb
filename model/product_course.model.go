@@ -22,8 +22,10 @@ type ProductCourse struct {
 
 type APIProductCourseResponse struct {
 	ProductCourse
-	Grade string                      `json:"grade"`
-	User  ProductCourseWithUserScheme `json:"user"`
+	Subject *ProductCourseWithSubjectScheme `json:"subject"`
+	Grade   *ProductCourseWithGradeScheme   `json:"grade"`
+	User    ProductCourseWithUserScheme     `json:"user"`
+
 	// Subject *Subject                     `json:"subject"`
 	// Grade   *Grade                       `json:"grade"`
 }
@@ -34,6 +36,19 @@ type ProductCourseWithUserScheme struct {
 	Username string    `json:"username"`
 	Name     string    `json:"name"`
 	// Area     []WithDistrictScheme `json:"areas"`
+}
+
+type ProductCourseWithGradeScheme struct {
+	ID   uuid.UUID `json:"id"`
+	Name string    `json:"name"`
+	Slug string    `json:"slug"`
+}
+
+type ProductCourseWithSubjectScheme struct {
+	ID   uuid.UUID `gorm:"primaryKey" json:"id"`
+	Name string    `json:"name"`
+	Slug string    `json:"slug"`
+	Icon *string   `json:"icon"`
 }
 
 // type WithDistrictScheme struct {
