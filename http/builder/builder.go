@@ -125,4 +125,9 @@ func Build(route *gin.Engine, db *gorm.DB) {
 	productCourseMemberHandler := memberHandler.NewProductCourseHandler(productCourseMemberService)
 	productCourseMemberHandler.RegisterRoute(route)
 
+	courseRequestMemberRepository := usecaseMemberRepository.NewCourseRequestRepository(db)
+	courseRequestMemberService := usecaseMemberService.NewCourseRequestService(courseRequestMemberRepository)
+	courseRequestMemberHandler := memberHandler.NewCourseRequestHandler(courseRequestMemberService)
+	courseRequestMemberHandler.RegisterRoute(route)
+
 }

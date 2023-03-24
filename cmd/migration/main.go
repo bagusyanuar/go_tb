@@ -26,6 +26,7 @@ func main() {
 	database.AutoMigrate(config.Mentor{})
 	database.AutoMigrate(config.ProductCourse{})
 	database.AutoMigrate(config.Pricing{})
+	database.AutoMigrate(config.CourseRequest{})
 
 	database.SetupJoinTable(&config.Subject{}, "Grades", &config.Grade{})
 	database.SetupJoinTable(&config.User{}, "Districts", &config.District{})
