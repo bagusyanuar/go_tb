@@ -30,9 +30,13 @@ func (repository *implementProductCourseRepository) GetData(subjectID string, gr
 		Joins("JOIN users ON users.id = product_courses.user_id").
 		Joins("JOIN mentors ON users.id = mentors.user_id").
 		Joins("JOIN grades ON product_courses.grade_id = grades.id").
+		Joins("JOIN subjects ON product_courses.subject_id = subjects.id").
 		Select("product_courses.*", sqlPricing).
 		Preload("User.Mentor").
 		Preload("Grade").
+		Preload("Subject").
+		Where("subjects.id = ?", subjectID).
+		Where("grades.id = ?", gradeID).
 		Having(havingPricing).
 		Find(&data).Error; err != nil {
 		return data, err
